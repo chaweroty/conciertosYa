@@ -6,7 +6,6 @@ import RegistrationPage from './components/auth/RegistrationPage';
 import FooterComponent from './components/common/Footer';
 import UserService from './components/service/UserService';
 import UpdateUser from './components/userspage/Updateuser';
-
 import UserManagementPage from './components/userspage/UserManagementPage';
 import ProfilePage from './components/userspage/ProfilePage';
 
@@ -21,21 +20,22 @@ function App() {
   return (
     <div className="App">
       {/* Condicional para no mostrar Navbar ni Footer en login o register */}
+      {/* */}
       {!isLoginOrRegister && <Navbar />}
       
       <div className="content">
         <Routes>
           {/* Rutas Públicas */}
-          <Route exact path="/" element={<LoginPage />} />
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegistrationPage />} />
 
-          {/* Rutas Protegidas - Solo accesibles si el usuario está autenticado */}
-          {isAuthenticated && (
-            <>
-              <Route path="/profile" element={<ProfilePage />} />
-            </>
-          )}
+       {/* Rutas Protegidas - Solo accesibles si el usuario está autenticado */}
+{isAuthenticated && (
+  <>
+    <Route path="/profile" element={<ProfilePage />} />
+  </>
+)}
+
 
           {/* Rutas de Admin - Solo accesibles si el usuario es admin */}
           {isAuthenticated && isAdmin && (
