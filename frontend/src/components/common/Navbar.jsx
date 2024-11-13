@@ -17,7 +17,7 @@ function Navbar() {
     };
 
     return (
-        <nav className="bg-gradient-to-r from-violet-950 to-violet-900 p-4">
+        <nav className="bg-black p-4">
             <ul className="flex justify-between items-center text-white">
                 <li className="font-bold text-2xl">
                     <Link to="/">ConciertosYa</Link>
@@ -32,7 +32,7 @@ function Navbar() {
                         <>
                             <li>
                                 <Link to="/profile" className="hover:underline">Profile</Link>
-                            </li>igt
+                            </li>
                             {isAdmin && (
                                 <li>
                                     <Link to="/admin/user-management" className="hover:underline">User Management</Link>
