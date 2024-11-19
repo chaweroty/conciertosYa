@@ -8,6 +8,8 @@ import UserService from './components/service/UserService';
 import UpdateUser from './components/userspage/Updateuser';
 import UserManagementPage from './components/userspage/UserManagementPage';
 import ProfilePage from './components/userspage/ProfilePage';
+import ConcertDetails from './components/ConcertDetails/ConcertDetails';
+import Checkout from './components/checkout/Checkout';
 
 function App() {
   const isAuthenticated = UserService.isAuthenticated();
@@ -33,6 +35,7 @@ function App() {
 {isAuthenticated && (
   <>
     <Route path="/profile" element={<ProfilePage />} />
+    <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
   </>
 )}
 
@@ -42,6 +45,8 @@ function App() {
             <>
               <Route path="/admin/user-management" element={<UserManagementPage />} />
               <Route path="/update-user/:userId" element={<UpdateUser />} />
+              <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
+              <Route path="/Checkout" element={<Checkout />} />
             </>
           )}
 

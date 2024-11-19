@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import UserService from '../service/UserService';
+import Sidebar from '../sidebar/Sidebar';
 
 function UserManagementPage() {
   const [users, setUsers] = useState([]);
@@ -23,7 +24,6 @@ function UserManagementPage() {
     }
   };
 
-
   const deleteUser = async (userId) => {
     try {
       // Prompt for confirmation before deleting the user
@@ -42,6 +42,7 @@ function UserManagementPage() {
 
   return (
     <div className="user-management-container">
+       <Sidebar />
       <h2>Users Management Page</h2>
       <button className='reg-button'> <Link to="/register">Add User</Link></button>
       <table>

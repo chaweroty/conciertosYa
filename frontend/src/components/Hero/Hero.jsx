@@ -2,7 +2,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="relative h-screen w-full">
+    <div className="relative h-[600px] w-full"> {/* Cambié h-screen por h-96 */}
       <img
         src="https://img.freepik.com/foto-gratis/vista-trasera-gran-grupo-fanaticos-musica-frente-al-escenario-concierto-musica-noche-copiar-espacio_637285-623.jpg?t=st=1731534665~exp=1731538265~hmac=46e91d26b51899d16b022a087df0668389876cb05ad6699a43b13367c541af0c&w=1060"
         alt="Background Image"
