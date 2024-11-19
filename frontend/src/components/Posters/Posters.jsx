@@ -16,6 +16,7 @@ const Posters = () => {
           <Link to={`/concert-details/1`}>
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Linkin_Park_-_From_Zero_Lead_Press_Photo_-_James_Minchin_III.jpg"
+
               alt="Product"
               className="h-80 w-72 object-cover rounded-t-xl"
             />
@@ -25,6 +26,7 @@ const Posters = () => {
               <div className="flex items-center">
                 <p className="text-lg font-semibold text-black cursor-auto my-3">Bogota, Colombia</p>
                 <div className="ml-auto">
+
                   <button className="text-blue-500 font-semibold hover:underline">Ver más</button>
                 </div>
               </div>
