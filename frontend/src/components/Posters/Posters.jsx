@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Posters = () => {
   return (
@@ -13,30 +13,28 @@ const Posters = () => {
       >
         {/* Product Card 1 */}
         <div className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
-          <a href="#">
+          <Link to={`/concert-details/1`}>
             <img
-              src="https://elcomercio-depor-prod.web.arc-cdn.net/resizer/v2/SWGJJNBRTFBRXFCOH6I5Y4YH7Y.jpg?auth=1e10e4743cbaf20d3270e46330795e9a27dcada6ade1cb916c4edda812d149d5&width=1200&height=677&smart=true&quality=90"
+              src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Linkin_Park_-_From_Zero_Lead_Press_Photo_-_James_Minchin_III.jpg"
+
               alt="Product"
               className="h-80 w-72 object-cover rounded-t-xl"
             />
             <div className="px-4 py-3 w-72">
-              <p className="text-lg font-bold text-black truncate block capitalize">Los tigres del norte</p>
-              <span className="text-gray-400 mr-3 uppercase text-xs">24 de Diciembre</span>
+              <p className="text-lg font-bold text-black truncate block capitalize">Linkin Park</p>
+              <span className="text-gray-400 mr-3 uppercase text-xs">Sabado, 9 de noviembre</span>
               <div className="flex items-center">
-                <p className="text-lg font-semibold text-black cursor-auto my-3">Pitalito, Huila</p>
+                <p className="text-lg font-semibold text-black cursor-auto my-3">Bogota, Colombia</p>
                 <div className="ml-auto">
-                  {/* Reemplazar ícono por botón "Ver más" */}
+
                   <button className="text-blue-500 font-semibold hover:underline">Ver más</button>
                 </div>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        {/* Repeat the Product Card for other items */}
-        {/* Product Card 2 */}
-        {/* Add other cards as needed, following the same structure */}
-        
+        {/* Agrega más Product Cards según sea necesario */}
       </section>
     </div>
   );
