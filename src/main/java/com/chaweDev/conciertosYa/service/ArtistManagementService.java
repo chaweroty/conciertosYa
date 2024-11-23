@@ -30,10 +30,10 @@ public class ArtistManagementService {
             OurArtists ourArtistResult = artistRepo.save(savedArtist);
             if (ourArtistResult.getId() > 0) {
                 response.setOurArtists(ourArtistResult);
-                response.setMessage("User Saved Successfully");
+                response.setMessage("Artist Saved Successfully");
                 response.setStatusCode(200);
             } else {
-                response.setMessage("User not saved due to an unknown error.");
+                response.setMessage("Artist not saved due to an unknown error.");
                 response.setStatusCode(500);
             }
         } catch (Exception e) {

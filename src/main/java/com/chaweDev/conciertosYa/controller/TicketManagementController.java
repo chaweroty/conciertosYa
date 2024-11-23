@@ -16,7 +16,7 @@ public class TicketManagementController {
     private TicketManagementService ticketManagementService;
 
     @PostMapping("/add")
-    public ResponseEntity<OurTicketsDTO> addEvent(@RequestBody OurTicketsDTO ticket) {
+    public ResponseEntity<OurTicketsDTO> addTicket(@RequestBody OurTicketsDTO ticket) {
         OurTicketsDTO response = ticketManagementService.addTicket(ticket);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -28,17 +28,17 @@ public class TicketManagementController {
     }
 
     @GetMapping("/get/{ticketId}")
-    public ResponseEntity<OurTicketsDTO> getEventById(@PathVariable Integer ticketId) {
+    public ResponseEntity<OurTicketsDTO> getTicketById(@PathVariable Integer ticketId) {
         return ResponseEntity.ok(ticketManagementService.getTicketById(ticketId));
     }
 
     @PutMapping("/update/{ticketId}")
-    public ResponseEntity<OurTicketsDTO> updateEvent(@PathVariable Integer ticketId, @RequestBody OurTickets ticket) {
+    public ResponseEntity<OurTicketsDTO> updateTicket(@PathVariable Integer ticketId, @RequestBody OurTickets ticket) {
         return ResponseEntity.ok(ticketManagementService.updateTicket(ticketId, ticket));
     }
 
     @DeleteMapping("/delete/{ticketId}")
-    public ResponseEntity<OurTicketsDTO> deleteEvent(@PathVariable Integer ticketId) {
+    public ResponseEntity<OurTicketsDTO> deleteTicket(@PathVariable Integer ticketId) {
         return ResponseEntity.ok(ticketManagementService.deleteTicket(ticketId));
     }
 }

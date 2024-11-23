@@ -1,11 +1,13 @@
 package com.chaweDev.conciertosYa.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "ourplaces")
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OurPlaces {
 
     @Id

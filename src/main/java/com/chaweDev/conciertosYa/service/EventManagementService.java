@@ -29,10 +29,10 @@ public class EventManagementService {
             OurEvents ourEventResult = eventRepo.save(savedEvent);
             if (savedEvent.getId() > 0) {
                 response.setOurEvents(ourEventResult);
-                response.setMessage("User Saved Successfully");
+                response.setMessage("Event Saved Successfully");
                 response.setStatusCode(200);
             } else {
-                response.setMessage("User not saved due to an unknown error.");
+                response.setMessage("Event not saved due to an unknown error.");
                 response.setStatusCode(500);
             }
 

@@ -12,15 +12,14 @@ public class OurSeatsDTO {
     private int statusCode;
     private String error;
     private String message;
-    private Integer id;
     private String code;
-    private String row;
-    private String column;
+    private Integer row;
+    private Integer column;
     private Double price;
     private Double discount;
     private String type; // General, VIP, Palco
     private String state; // Available, Reserved, Sold
-    private OurPlaces place;
+    private Integer place;
     private OurSeats ourSeats;
     private List<OurSeats> ourSeatsList;
 }

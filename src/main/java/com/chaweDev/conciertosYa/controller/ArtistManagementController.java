@@ -15,29 +15,29 @@ public class ArtistManagementController {
     private ArtistManagementService artistManagementService;
 
     @PostMapping("/add")
-    public ResponseEntity<OurArtistsDTO> addPlace(@RequestBody OurArtistsDTO artist) {
+    public ResponseEntity<OurArtistsDTO> addArtist(@RequestBody OurArtistsDTO artist) {
         OurArtistsDTO response = artistManagementService.addArtist(artist);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<OurArtistsDTO> getAllPlaces() {
+    public ResponseEntity<OurArtistsDTO> getAllArtists() {
         OurArtistsDTO response = artistManagementService.getAllArtists();
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/get/{artistId}")
-    public ResponseEntity<OurArtistsDTO> getPlaceById(@PathVariable Integer artistId) {
+    public ResponseEntity<OurArtistsDTO> getArtistById(@PathVariable Integer artistId) {
         return ResponseEntity.ok(artistManagementService.getArtistById(artistId));
     }
 
     @PutMapping("/update/{artistId}")
-    public ResponseEntity<OurArtistsDTO> updatePlace(@PathVariable Integer artistId, @RequestBody OurArtists artist) {
+    public ResponseEntity<OurArtistsDTO> updateArtist(@PathVariable Integer artistId, @RequestBody OurArtists artist) {
         return ResponseEntity.ok(artistManagementService.updateArtist(artistId, artist));
     }
 
     @DeleteMapping("/delete/{artistId}")
-    public ResponseEntity<OurArtistsDTO> deletePlace(@PathVariable Integer artistId) {
+    public ResponseEntity<OurArtistsDTO> deleteArtist(@PathVariable Integer artistId) {
         return ResponseEntity.ok(artistManagementService.deleteArtist(artistId));
     }
 }

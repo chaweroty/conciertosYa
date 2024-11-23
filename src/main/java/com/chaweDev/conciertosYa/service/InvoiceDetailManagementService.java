@@ -1,7 +1,9 @@
-/**package com.chaweDev.conciertosYa.service;
+package com.chaweDev.conciertosYa.service;
 
-import com.chaweDev.conciertosYa.dto.ReqRes;
+import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
+import com.chaweDev.conciertosYa.entity.Invoice;
 import com.chaweDev.conciertosYa.entity.InvoiceDetail;
+import com.chaweDev.conciertosYa.entity.OurTickets;
 import com.chaweDev.conciertosYa.repository.InvoiceDetailRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,23 @@ public class InvoiceDetailManagementService {
     @Autowired
     private InvoiceDetailRepo invoiceDetailRepo;
 
-    public ReqRes addInvoiceDetail(InvoiceDetail invoiceDetail) {
-        ReqRes response = new ReqRes();
+    public InvoiceDetailDTO addInvoiceDetail(InvoiceDetailDTO invoiceDetail) {
+        InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {
-            InvoiceDetail savedInvoiceDetail = invoiceDetailRepo.save(invoiceDetail);
-            response.setStatusCode(200);
-            response.setMessage("Invoice Detail added successfully");
-            response.setInvoiceDetail(savedInvoiceDetail);
+            InvoiceDetail savedInvoiceDetail = new InvoiceDetail();
+
+            saveInvoiceDetail(savedInvoiceDetail, invoiceDetail.getQuantity(), invoiceDetail.getUnitPrice(), invoiceDetail.getDiscount(), invoiceDetail.getTotalPrice(), invoiceDetail.getTicket(), invoiceDetail.getInvoice());
+
+            InvoiceDetail updatedInvoiceDetail = invoiceDetailRepo.save(savedInvoiceDetail);
+
+            if (updatedInvoiceDetail.getId() > 0) {
+                response.setOurInvoiceDetail(updatedInvoiceDetail);
+                response.setMessage("Invoice detail Saved Successfully");
+                response.setStatusCode(200);
+            } else {
+                response.setMessage("Invoice detail not saved due to an unknown error.");
+                response.setStatusCode(500);
+            }
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred: " + e.getMessage());
@@ -29,8 +41,8 @@ public class InvoiceDetailManagementService {
         return response;
     }
 
-    public ReqRes getAllInvoiceDetails() {
-        ReqRes response = new ReqRes();
+    public InvoiceDetailDTO getAllInvoiceDetails() {
+        InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {
             List<InvoiceDetail> invoiceDetails = invoiceDetailRepo.findAll();
             if (invoiceDetails.isEmpty()) {
@@ -38,7 +50,7 @@ public class InvoiceDetailManagementService {
                 response.setMessage("No invoice details found");
             } else {
                 response.setStatusCode(200);
-                response.setInvoiceDetailList(invoiceDetails);
+                response.setOurInvoicesDetailList(invoiceDetails);
                 response.setMessage("Invoice details found successfully");
             }
         } catch (Exception e) {
@@ -48,12 +60,12 @@ public class InvoiceDetailManagementService {
         return response;
     }
 
-    public ReqRes getInvoiceDetailById(Integer invoiceDetailId) {
-        ReqRes response = new ReqRes();
+    public InvoiceDetailDTO getInvoiceDetailById(Integer invoiceDetailId) {
+        InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {
             InvoiceDetail invoiceDetail = invoiceDetailRepo.findById(invoiceDetailId).orElseThrow(() -> new RuntimeException("Invoice Detail not found"));
             response.setStatusCode(200);
-            response.setInvoiceDetail(invoiceDetail);
+            response.setOurInvoiceDetail(invoiceDetail);
             response.setMessage("Invoice Detail found successfully");
         } catch (Exception e) {
             response.setStatusCode(500);
@@ -62,18 +74,20 @@ public class InvoiceDetailManagementService {
         return response;
     }
 
-    public ReqRes updateInvoiceDetail(Integer invoiceDetailId, InvoiceDetail invoiceDetail) {
-        ReqRes response = new ReqRes();
+    public InvoiceDetailDTO updateInvoiceDetail(Integer invoiceDetailId, InvoiceDetail invoiceDetail) {
+        InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {
             Optional<InvoiceDetail> existingInvoiceDetailOpt = invoiceDetailRepo.findById(invoiceDetailId);
             if (existingInvoiceDetailOpt.isPresent()) {
                 InvoiceDetail existingInvoiceDetail = existingInvoiceDetailOpt.get();
-                existingInvoiceDetail.setPrice(invoiceDetail.getPrice());
-                existingInvoiceDetail.setQuantity(invoiceDetail.getQuantity());
+
+                saveInvoiceDetail(existingInvoiceDetail, invoiceDetail.getQuantity(), invoiceDetail.getUnitPrice(), invoiceDetail.getDiscount(), invoiceDetail.getTotalPrice(), invoiceDetail.getTicket(), invoiceDetail.getInvoice());
+
 
                 InvoiceDetail updatedInvoiceDetail = invoiceDetailRepo.save(existingInvoiceDetail);
+
                 response.setStatusCode(200);
-                response.setInvoiceDetail(updatedInvoiceDetail);
+                response.setOurInvoiceDetail(updatedInvoiceDetail);
                 response.setMessage("Invoice Detail updated successfully");
             } else {
                 response.setStatusCode(404);
@@ -86,8 +100,17 @@ public class InvoiceDetailManagementService {
         return response;
     }
 
-    public ReqRes deleteInvoiceDetail(Integer invoiceDetailId) {
-        ReqRes response = new ReqRes();
+    private void saveInvoiceDetail(InvoiceDetail existingInvoiceDetail, Integer quantity, Double unitPrice, Double discount, Double totalPrice, OurTickets ticket, Invoice invoice) {
+        existingInvoiceDetail.setQuantity(quantity);
+        existingInvoiceDetail.setUnitPrice(unitPrice);
+        existingInvoiceDetail.setDiscount(discount);
+        existingInvoiceDetail.setTotalPrice(totalPrice);
+        existingInvoiceDetail.setTicket(ticket);
+        existingInvoiceDetail.setInvoice(invoice);
+    }
+
+    public InvoiceDetailDTO deleteInvoiceDetail(Integer invoiceDetailId) {
+        InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {
             Optional<InvoiceDetail> invoiceDetailOptional = invoiceDetailRepo.findById(invoiceDetailId);
             if (invoiceDetailOptional.isPresent()) {
@@ -104,4 +127,4 @@ public class InvoiceDetailManagementService {
         }
         return response;
     }
-} **/
+}

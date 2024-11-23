@@ -13,6 +13,10 @@ public class PaymentMethod {
     private Integer id;
     private String type; // Cash, Cash and Credit Card, etc.
 
+    @ManyToOne
+    @JoinColumn(name = "id_client")
+    private OurUsers client;
+
     @Override
     public String toString() {
         return "PaymentMethod{" +

@@ -25,10 +25,10 @@ public class PlaceManagementService {
 
             if (ourPlaceResult.getId() > 0) {
                 response.setOurPlaces(ourPlaceResult);
-                response.setMessage("User Saved Successfully");
+                response.setMessage("Place Saved Successfully");
                 response.setStatusCode(200);
             } else {
-                response.setMessage("User not saved due to an unknown error.");
+                response.setMessage("Place not saved due to an unknown error.");
                 response.setStatusCode(500);
             }
 

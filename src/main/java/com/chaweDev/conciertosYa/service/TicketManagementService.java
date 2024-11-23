@@ -30,10 +30,10 @@ public class TicketManagementService {
 
             if (ourTicketResult.getId() > 0) {
                 response.setOurTickets(ourTicketResult);
-                response.setMessage("User Saved Successfully");
+                response.setMessage("Ticket Saved Successfully");
                 response.setStatusCode(200);
             } else {
-                response.setMessage("User not saved due to an unknown error.");
+                response.setMessage("Ticket not saved due to an unknown error.");
                 response.setStatusCode(500);
             }
         } catch (Exception e) {

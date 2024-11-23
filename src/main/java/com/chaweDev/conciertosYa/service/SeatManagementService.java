@@ -1,8 +1,10 @@
 package com.chaweDev.conciertosYa.service;
 
 import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
+import com.chaweDev.conciertosYa.entity.OurPlaces;
 import com.chaweDev.conciertosYa.entity.OurSeats;
 import com.chaweDev.conciertosYa.repository.SeatRepo;
+import com.chaweDev.conciertosYa.repository.PlaceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ public class SeatManagementService {
 
     @Autowired
     private SeatRepo seatRepo;
+    private PlaceRepo placeRepo;
 
     public OurSeatsDTO addSeat(OurSeatsDTO seat) {
         OurSeatsDTO response = new OurSeatsDTO();
@@ -25,10 +28,10 @@ public class SeatManagementService {
             OurSeats ourSeatResult = seatRepo.save(ourSeat);
             if (ourSeatResult.getId() > 0) {
                 response.setOurSeats(ourSeatResult);
-                response.setMessage("User Saved Successfully");
+                response.setMessage("Seat Saved Successfully");
                 response.setStatusCode(200);
             } else {
-                response.setMessage("User not saved due to an unknown error.");
+                response.setMessage("Seat not saved due to an unknown error.");
                 response.setStatusCode(500);
             }
 
@@ -88,7 +91,7 @@ public class SeatManagementService {
                 response.setMessage("Seat updated successfully");
             } else {
                 response.setStatusCode(404);
-                response.setMessage("Place not found");
+                response.setMessage("Seat not found");
             }
         } catch (Exception e) {
             response.setStatusCode(500);
@@ -105,7 +108,10 @@ public class SeatManagementService {
         existingSeat.setDiscount(seat.getDiscount());
         existingSeat.setType(seat.getType());
         existingSeat.setState(seat.getState());
-        existingSeat.setPlace(seat.getPlace());
+
+        OurPlaces place = placeRepo.findById(seat.getPlace())
+                .orElseThrow(() -> new RuntimeException("Seat not found"));
+        existingSeat.setPlace(place);
     }
 
     public OurSeatsDTO deleteSeat(Integer seatId) {

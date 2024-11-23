@@ -1,6 +1,6 @@
-/** package com.chaweDev.conciertosYa.service;
+package com.chaweDev.conciertosYa.service;
 
-import com.chaweDev.conciertosYa.dto.ReqRes;
+import com.chaweDev.conciertosYa.dto.PaymentMethodDTO;
 import com.chaweDev.conciertosYa.entity.PaymentMethod;
 import com.chaweDev.conciertosYa.repository.PaymentMethodRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,23 @@ public class PaymentMethodManagementService {
     @Autowired
     private PaymentMethodRepo paymentMethodRepo;
 
-    public ReqRes addPaymentMethod(PaymentMethod paymentMethod) {
-        ReqRes response = new ReqRes();
+    public PaymentMethodDTO addPaymentMethod(PaymentMethodDTO paymentMethod) {
+        PaymentMethodDTO response = new PaymentMethodDTO();
         try {
-            PaymentMethod savedPaymentMethod = paymentMethodRepo.save(paymentMethod);
-            response.setStatusCode(200);
-            response.setMessage("Payment Method added successfully");
-            response.setPaymentMethod(savedPaymentMethod);
+            PaymentMethod savedPaymentMethod = new PaymentMethod();
+
+            savedPaymentMethod.setType(paymentMethod.getType());
+            savedPaymentMethod.setClient(paymentMethod.getClient());
+
+            PaymentMethod ourPaymentMethodResult = paymentMethodRepo.save(savedPaymentMethod);
+            if (ourPaymentMethodResult.getId() > 0) {
+                response.setPaymentMethod(ourPaymentMethodResult);
+                response.setMessage("Payment method Saved Successfully");
+                response.setStatusCode(200);
+            } else {
+                response.setMessage("Payment method not saved due to an unknown error.");
+                response.setStatusCode(500);
+            }
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred: " + e.getMessage());
@@ -29,8 +39,8 @@ public class PaymentMethodManagementService {
         return response;
     }
 
-    public ReqRes getAllPaymentMethods() {
-        ReqRes response = new ReqRes();
+    public PaymentMethodDTO getAllPaymentMethods() {
+        PaymentMethodDTO response = new PaymentMethodDTO();
         try {
             List<PaymentMethod> paymentMethods = paymentMethodRepo.findAll();
             if (paymentMethods.isEmpty()) {
@@ -38,7 +48,7 @@ public class PaymentMethodManagementService {
                 response.setMessage("No payment methods found");
             } else {
                 response.setStatusCode(200);
-                response.setPaymentMethodList(paymentMethods);
+                response.setOurPaymentMethodList(paymentMethods);
                 response.setMessage("Payment methods found successfully");
             }
         } catch (Exception e) {
@@ -48,8 +58,8 @@ public class PaymentMethodManagementService {
         return response;
     }
 
-    public ReqRes getPaymentMethodById(Integer paymentMethodId) {
-        ReqRes response = new ReqRes();
+    public PaymentMethodDTO getPaymentMethodById(Integer paymentMethodId) {
+        PaymentMethodDTO response = new PaymentMethodDTO();
         try {
             PaymentMethod paymentMethod = paymentMethodRepo.findById(paymentMethodId).orElseThrow(() -> new RuntimeException("Payment Method not found"));
             response.setStatusCode(200);
@@ -62,19 +72,25 @@ public class PaymentMethodManagementService {
         return response;
     }
 
-    public ReqRes updatePaymentMethod(Integer paymentMethodId, PaymentMethod paymentMethod) {
-        ReqRes response = new ReqRes();
+    public PaymentMethodDTO updatePaymentMethod(Integer paymentMethodId, PaymentMethod paymentMethod) {
+        PaymentMethodDTO response = new PaymentMethodDTO();
         try {
             Optional<PaymentMethod> existingPaymentMethodOpt = paymentMethodRepo.findById(paymentMethodId);
             if (existingPaymentMethodOpt.isPresent()) {
                 PaymentMethod existingPaymentMethod = existingPaymentMethodOpt.get();
-                existingPaymentMethod.setType(paymentMethod.getType());
-                existingPaymentMethod.setProvider(paymentMethod.getProvider());
 
-                PaymentMethod updatedPaymentMethod = paymentMethodRepo.save(existingPaymentMethod);
-                response.setStatusCode(200);
-                response.setPaymentMethod(updatedPaymentMethod);
-                response.setMessage("Payment Method updated successfully");
+                existingPaymentMethod.setType(paymentMethod.getType());
+                existingPaymentMethod.setClient(paymentMethod.getClient());
+
+                PaymentMethod ourPaymentMethodResult = paymentMethodRepo.save(existingPaymentMethod);
+                if (ourPaymentMethodResult.getId() > 0) {
+                    response.setPaymentMethod(ourPaymentMethodResult);
+                    response.setMessage("Payment method updated Successfully");
+                    response.setStatusCode(200);
+                } else {
+                    response.setMessage("Payment method not updated due to an unknown error.");
+                    response.setStatusCode(500);
+                }
             } else {
                 response.setStatusCode(404);
                 response.setMessage("Payment Method not found");
@@ -86,8 +102,8 @@ public class PaymentMethodManagementService {
         return response;
     }
 
-    public ReqRes deletePaymentMethod(Integer paymentMethodId) {
-        ReqRes response = new ReqRes();
+    public PaymentMethodDTO deletePaymentMethod(Integer paymentMethodId) {
+        PaymentMethodDTO response = new PaymentMethodDTO();
         try {
             Optional<PaymentMethod> paymentMethodOptional = paymentMethodRepo.findById(paymentMethodId);
             if (paymentMethodOptional.isPresent()) {
@@ -104,4 +120,4 @@ public class PaymentMethodManagementService {
         }
         return response;
     }
-} **/
+}

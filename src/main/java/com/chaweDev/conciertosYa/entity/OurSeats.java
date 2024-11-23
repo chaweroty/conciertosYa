@@ -7,17 +7,21 @@ import lombok.Data;
 @Table(name = "ourseats")
 @Data
 public class OurSeats {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String code;
-    private String row;
-    private String column;
+
+    @Column(name = "`row`") // Escaping 'row' as it's also a reserved keyword
+    private Integer row;
+
+    @Column(name = "`column`") // Escaping 'column' to avoid SQL syntax error
+    private Integer column;
+
     private Double price;
     private Double discount;
-    private String type; // General, VIP, Palco
-    private String state; // Available, Reserved, Sold
+    private String type;
+    private String state;
 
     @ManyToOne
     @JoinColumn(name = "place_id")
