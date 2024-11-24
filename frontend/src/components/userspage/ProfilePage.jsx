@@ -15,7 +15,6 @@ function ProfilePage() {
 
     const fetchProfileInfo = async () => {
         try {
-
             const token = localStorage.getItem('token'); // Retrieve the token from localStorage
             const response = await UserService.getYourProfile(token);
             setProfileInfo(response.ourUsers);
@@ -23,7 +22,6 @@ function ProfilePage() {
             console.error('Error fetching profile information:', error);
         }
     };
-
     return (
         <div className="profile-page-container">
             <Hero/>
@@ -37,14 +35,7 @@ function ProfilePage() {
             )}
              <Service />
              <Concerts />
-              
         </div>
-
-
-
-
-
-
     );
 }
 

@@ -30,6 +30,12 @@ function App() {
           {/* Rutas Públicas */}
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegistrationPage />} />
+          <Route path="/admin/user-management" element={<UserManagementPage />} />
+          <Route path="/update-user/:userId" element={<UpdateUser />} />
+          <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
+          <Route path="/Checkout" element={<Checkout />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
 
        {/* Rutas Protegidas - Solo accesibles si el usuario está autenticado */}
 {isAuthenticated && (
@@ -43,10 +49,12 @@ function App() {
           {/* Rutas de Admin - Solo accesibles si el usuario es admin */}
           {isAuthenticated && isAdmin && (
             <>
-              <Route path="/admin/user-management" element={<UserManagementPage />} />
-              <Route path="/update-user/:userId" element={<UpdateUser />} />
-              <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
-              <Route path="/Checkout" element={<Checkout />} />
+            {/* <Route path="/admin/user-management" element={<UserManagementPage />} />*/}
+            {/*<Route path="/update-user/:userId" element={<UpdateUser />} /> */}
+            {/* <Route path="/concert-details/:artistId" element={<ConcertDetails />} />*/}
+            {/*  <Route path="/Checkout" element={<Checkout />} />*/}
+
+            
             </>
           )}
 

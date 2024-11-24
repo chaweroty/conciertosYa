@@ -1,187 +1,188 @@
-import React from "react";
+import React, { useState } from "react";
 
-const UserTable = () => {
+const Users = () => {
+  const users = [
+    {
+      name: "Jane Doe",
+      email: "jane@example.com",
+      role: "Admin",
+      status: "Active",
+    },
+    {
+      name: "John Doe",
+      email: "john@example.com",
+      role: "User",
+      status: "Inactive",
+    },
+  ];
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const openEditModal = (user) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  };
+
+  const openDeleteModal = (user) => {
+    setSelectedUser(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedUser(null);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDelete = () => {
+    console.log("User deleted:", selectedUser);
+    closeModal();
+  };
+
+  const handleEdit = (event) => {
+    event.preventDefault();
+    console.log("User updated:", selectedUser);
+    closeModal();
+  };
+
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex items-center justify-between flex-wrap md:flex-nowrap pb-4 bg-white dark:bg-gray-900 space-y-4 md:space-y-0">
-        <div>
-          <button
-            id="dropdownActionButton"
-            data-dropdown-toggle="dropdownAction"
-            className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            type="button"
-          >
-            <span className="sr-only">Action button</span>
-            Action
-            <svg
-              className="w-2.5 h-2.5 ml-2.5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </button>
-          {/* Dropdown menu */}
-          <div
-            id="dropdownAction"
-            className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-          >
-            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
-              <li>
-                <a
-                  href="#"
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">Users</h1>
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      user.status === "Active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <button
+                    onClick={() => openEditModal(user)}
+                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 transition duration-150 ease-in-out"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => openDeleteModal(user)}
+                    className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Modal de edición */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow p-6 w-1/3">
+            <h2 className="text-lg font-bold mb-4">Edit User</h2>
+            <form onSubmit={handleEdit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Name</label>
+                <input
+                  type="text"
+                  value={selectedUser.name}
+                  onChange={(e) =>
+                    setSelectedUser({ ...selectedUser, name: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Email</label>
+                <input
+                  type="email"
+                  value={selectedUser.email}
+                  onChange={(e) =>
+                    setSelectedUser({ ...selectedUser, email: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 bg-gray-200 rounded mr-2"
                 >
-                  Reward
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
                 >
-                  Promote
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                >
-                  Activate account
-                </a>
-              </li>
-            </ul>
-            <div className="py-1">
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de eliminación */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow p-6 w-1/3 text-center">
+            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+            <p className="mb-4">
+              Are you sure you want to delete <b>{selectedUser.name}</b>?
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-gray-200 rounded mr-2"
               >
-                Delete User
-              </a>
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            id="table-search-users"
-            className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search for users"
-          />
-          <svg
-            className="absolute left-3 top-2.5 w-4 h-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-            />
-          </svg>
-        </div>
-      </div>
-
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="p-4">
-              <input
-                id="checkbox-all-search"
-                type="checkbox"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:bg-gray-700 dark:border-gray-600"
-              />
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Position
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Status
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            {
-              id: 1,
-              name: "Neil Sims",
-              email: "neil.sims@flowbite.com",
-              position: "React Developer",
-              status: "Online",
-              avatar: "/docs/images/people/profile-picture-1.jpg",
-            },
-            {
-              id: 2,
-              name: "Bonnie Green",
-              email: "bonnie@flowbite.com",
-              position: "Designer",
-              status: "Online",
-              avatar: "/docs/images/people/profile-picture-3.jpg",
-            },
-          ].map((user) => (
-            <tr
-              key={user.id}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <td className="p-4">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:bg-gray-700 dark:border-gray-600"
-                />
-              </td>
-              <th scope="row" className="px-6 py-4 text-gray-900 dark:text-white">
-                <div className="flex items-center">
-                  <img
-                    className="w-10 h-10 rounded-full"
-                    src={user.avatar}
-                    alt={`${user.name}'s avatar`}
-                  />
-                  <div className="pl-3">
-                    <div className="text-base font-semibold">{user.name}</div>
-                    <div className="font-normal text-gray-500">{user.email}</div>
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">{user.position}</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
-                  {user.status}
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit user
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      )}
     </div>
   );
 };
 
-export default UserTable;
+export default Users;
