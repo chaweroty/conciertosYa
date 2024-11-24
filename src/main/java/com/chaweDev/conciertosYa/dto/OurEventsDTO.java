@@ -21,7 +21,7 @@ public class OurEventsDTO {
     private String description;
     private String musicalGenre;
     private String status;
-    private String image;
+    private String image;   
 
     // Relación con lugar
     private OurPlaces place;

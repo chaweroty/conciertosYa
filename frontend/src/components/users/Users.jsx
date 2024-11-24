@@ -6,12 +6,14 @@ const Users = () => {
       name: "Jane Doe",
       email: "jane@example.com",
       role: "Admin",
+      city: "Manizales",
       status: "Active",
     },
     {
       name: "John Doe",
       email: "john@example.com",
       role: "User",
+      city: "Bogota",
       status: "Inactive",
     },
   ];
@@ -64,6 +66,9 @@ const Users = () => {
                 Role
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              City
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -77,6 +82,7 @@ const Users = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.city}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -155,7 +161,6 @@ const Users = () => {
           </div>
         </div>
       )}
-
       {/* Modal de eliminación */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -184,5 +189,4 @@ const Users = () => {
     </div>
   );
 };
-
-export default Users;
+export default Users; 

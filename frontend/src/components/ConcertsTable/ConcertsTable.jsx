@@ -1,158 +1,199 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ConcertsTable = () => {
-  // Datos simulados para la tabla
-  const concerts = [
+  const events = [
     {
       id: 1,
-      name: "Evento A",
-      position: "Posición X",
-      status: "Activo",
-      image: "https://example.com/images/profile-picture-1.jpg",
+      name: "Music Fest 2024",
+      date: "2024-12-15",
+      location: "Central Park",
+      image: "https://via.placeholder.com/150/0000FF/808080?text=Music+Fest",
     },
     {
       id: 2,
-      name: "Evento B",
-      position: "Posición Y",
-      status: "Inactivo",
-      image: "https://example.com/images/profile-picture-2.jpg",
+      name: "Art Exhibition",
+      date: "2024-11-25",
+      location: "Modern Art Museum",
+      image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Art+Exhibit",
     },
   ];
 
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const openEditModal = (event) => {
+    setSelectedEvent(event);
+    setIsEditModalOpen(true);
+  };
+
+  const openDeleteModal = (event) => {
+    setSelectedEvent(event);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedEvent(null);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDelete = () => {
+    console.log("Event deleted:", selectedEvent);
+    closeModal();
+  };
+
+  const handleEdit = (event) => {
+    event.preventDefault();
+    console.log("Event updated:", selectedEvent);
+    closeModal();
+  };
+
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex items-center justify-between flex-col md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
-        <div>
-          <button
-            id="dropdownActionButton"
-            data-dropdown-toggle="dropdownAction"
-            className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            type="button"
-          >
-            Action
-            <svg
-              className="w-2.5 h-2.5 ms-2.5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </button>
-          <div
-            id="dropdownAction"
-            className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-          >
-            <ul
-              className="py-1 text-sm text-gray-700 dark:text-gray-200"
-              aria-labelledby="dropdownActionButton"
-            >
-              <li>
-                <a
-                  href="#"
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">Events</h1>
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Event
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Location
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {events.map((event) => (
+              <tr key={event.id}>
+                <th
+                  scope="row"
+                  className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                 >
-                  Reward
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  <img
+                    className="w-10 h-10 rounded-full"
+                    src={event.image}
+                    alt={`${event.name} image`}
+                  />
+                  <div className="ps-3">
+                    <div className="text-base font-semibold">{event.name}</div>
+                    <div className="font-normal text-gray-500">{event.date}</div>
+                  </div>
+                </th>
+                <td className="px-6 py-4 whitespace-nowrap">{event.date}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{event.location}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <button
+                    onClick={() => openEditModal(event)}
+                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => openDeleteModal(event)}
+                    className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow p-6 w-1/3">
+            <h2 className="text-lg font-bold mb-4">Edit Event</h2>
+            <form onSubmit={handleEdit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Name</label>
+                <input
+                  type="text"
+                  value={selectedEvent.name}
+                  onChange={(e) =>
+                    setSelectedEvent({ ...selectedEvent, name: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Date</label>
+                <input
+                  type="date"
+                  value={selectedEvent.date}
+                  onChange={(e) =>
+                    setSelectedEvent({ ...selectedEvent, date: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Location</label>
+                <input
+                  type="text"
+                  value={selectedEvent.location}
+                  onChange={(e) =>
+                    setSelectedEvent({
+                      ...selectedEvent,
+                      location: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 bg-gray-200 rounded mr-2"
                 >
-                  Promote
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
                 >
-                  Activate account
-                </a>
-              </li>
-            </ul>
-            <div className="py-1">
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow p-6 w-1/3 text-center">
+            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+            <p className="mb-4">
+              Are you sure you want to delete <b>{selectedEvent.name}</b>?
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-gray-200 rounded mr-2"
               >
-                Delete User
-              </a>
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            id="table-search-users"
-            className="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search for users"
-          />
-        </div>
-      </div>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="p-4">
-              <input
-                id="checkbox-all-search"
-                type="checkbox"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
-              />
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Image
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Position
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Status
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {concerts.map((concert) => (
-            <tr key={concert.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td className="p-4">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
-                />
-              </td>
-              <td className="px-6 py-4">
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src={concert.image}
-                  alt={concert.name}
-                />
-              </td>
-              <td className="px-6 py-4">{concert.name}</td>
-              <td className="px-6 py-4">{concert.position}</td>
-              <td className="px-6 py-4">{concert.status}</td>
-              <td className="px-6 py-4">
-                <a href="#" className="text-blue-600 hover:underline">
-                  Edit
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      )}
     </div>
   );
 };

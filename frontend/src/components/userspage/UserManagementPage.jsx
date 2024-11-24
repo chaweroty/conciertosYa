@@ -52,7 +52,7 @@ function UserManagementPage() {
     } else if (activeContent === "eventList") {
       return <ConcertsTable/>;
        ///
-    }else if (activeContent === "placeList") {
+    }else if (activeContent === "placesList") {
       return <PlaceTable/>;
        ///
     }else if (activeContent === "artistList") {

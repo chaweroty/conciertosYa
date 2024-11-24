@@ -31,7 +31,7 @@ function Navbar() {
                     {isAuthenticated && (
                         <>
                             <li>
-                                <Link to="/profile" className="hover:underline">Profile</Link>
+                                <Link to="/profile" className="hover:underline">Home</Link>
                             </li>
                             {isAdmin && (
                                 <li>

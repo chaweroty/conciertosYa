@@ -1,4 +1,7 @@
 import { HomeIcon, UserGroupIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { BsCalendar3WeekFill } from "react-icons/bs";
+import { FaMapLocationDot } from "react-icons/fa6";
+import { FaPerson } from "react-icons/fa6";
 import { useState } from "react";
 
 function Sidebar({ setActiveContent }) {
@@ -30,7 +33,7 @@ function Sidebar({ setActiveContent }) {
     },
     {
       name: "Eventos",
-      icon: <UserGroupIcon className="h-6 w-6" />,
+      icon: <BsCalendar3WeekFill  className="h-6 w-6" />,
       content: "Eventos",
       hasDropdown: true, // Indica si tiene un dropdown
       dropdownItems: [
@@ -39,7 +42,7 @@ function Sidebar({ setActiveContent }) {
     },
     {
       name: "Lugares",
-      icon: <UserGroupIcon className="h-6 w-6" />,
+      icon: <FaMapLocationDot className="h-6 w-6" />,
       content: "Eventos",
       hasDropdown: true, // Indica si tiene un dropdown
       dropdownItems: [
@@ -48,7 +51,7 @@ function Sidebar({ setActiveContent }) {
     },
     {
       name: "Artistas",
-      icon: <UserGroupIcon className="h-6 w-6" />,
+      icon: <FaPerson className="h-6 w-6" />,
       content: "Eventos",
       hasDropdown: true, // Indica si tiene un dropdown
       dropdownItems: [
