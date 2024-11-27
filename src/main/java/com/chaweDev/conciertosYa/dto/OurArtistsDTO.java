@@ -1,11 +1,15 @@
 package com.chaweDev.conciertosYa.dto;
 
 import com.chaweDev.conciertosYa.entity.OurArtists;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OurArtistsDTO {
 
     private int statusCode;

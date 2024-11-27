@@ -111,13 +111,13 @@ public class UsersManagementService {
         try {
             List<OurUsers> result = usersRepo.findAll();
 
-            if (!result.isEmpty()) {
+            if (result.isEmpty()) {
+                reqRes.setStatusCode(404);
+                reqRes.setMessage("No users found");
+            } else {
                 reqRes.setOurUsersList(result);
                 reqRes.setStatusCode(200);
                 reqRes.setMessage("Users found successfully");
-            } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("No users found");
             }
 
         } catch (Exception e) {
