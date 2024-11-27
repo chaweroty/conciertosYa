@@ -5,6 +5,7 @@ import Hero from '../Hero/Hero';
 import Service from '../Services/Service';
 import Concerts from '../Concerts/Concerts';
 import Posters from '../Posters/Posters';
+import Searcher from '../Searcher/Searcher';
 
 function ProfilePage() {
     const [profileInfo, setProfileInfo] = useState({});
@@ -15,7 +16,6 @@ function ProfilePage() {
 
     const fetchProfileInfo = async () => {
         try {
-
             const token = localStorage.getItem('token'); // Retrieve the token from localStorage
             const response = await UserService.getYourProfile(token);
             setProfileInfo(response.ourUsers);
@@ -23,11 +23,12 @@ function ProfilePage() {
             console.error('Error fetching profile information:', error);
         }
     };
-
     return (
         <div className="profile-page-container">
             <Hero/>
+            <Searcher/>
             <Posters/>
+           
             <h2>Profile Information</h2>
             <p>Name: {profileInfo.name}</p>
             <p>Email: {profileInfo.email}</p>
@@ -35,16 +36,8 @@ function ProfilePage() {
             {profileInfo.role === "ADMIN" && (
                 <button><Link to={`/update-user/${profileInfo.id}`}>Update This Profile</Link></button>
             )}
-             <Service />
-             <Concerts />
-              
+             
         </div>
-
-
-
-
-
-
     );
 }
 

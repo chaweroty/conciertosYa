@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserService from '../service/UserService';
 
-function Navbar() {
+function Navbar2() {
     const isAuthenticated = UserService.isAuthenticated();
     const isAdmin = UserService.isAdmin();
     const navigate = useNavigate();
@@ -49,4 +49,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default Navbar2;

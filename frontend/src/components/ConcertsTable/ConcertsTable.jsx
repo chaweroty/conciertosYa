@@ -1,75 +1,69 @@
 import React, { useState } from "react";
 
-const Users = () => {
-  const users = [
+const ConcertsTable = () => {
+  const events = [
     {
-      name: "Jane Doe",
-      email: "jane@example.com",
-      role: "Admin",
-      city: "Manizales",
-      status: "Active",
+      id: 1,
+      name: "Music Fest 2024",
+      date: "2024-12-15",
+      location: "Central Park",
+      image: "https://via.placeholder.com/150/0000FF/808080?text=Music+Fest",
     },
     {
-      name: "John Doe",
-      email: "john@example.com",
-      role: "User",
-      city: "Bogota",
-      status: "Inactive",
+      id: 2,
+      name: "Art Exhibition",
+      date: "2024-11-25",
+      location: "Modern Art Museum",
+      image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Art+Exhibit",
     },
   ];
 
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const openEditModal = (user) => {
-    setSelectedUser(user);
+  const openEditModal = (event) => {
+    setSelectedEvent(event);
     setIsEditModalOpen(true);
   };
 
-  const openDeleteModal = (user) => {
-    setSelectedUser(user);
+  const openDeleteModal = (event) => {
+    setSelectedEvent(event);
     setIsDeleteModalOpen(true);
   };
 
   const closeModal = () => {
-    setSelectedUser(null);
+    setSelectedEvent(null);
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
   };
 
   const handleDelete = () => {
-    console.log("User deleted:", selectedUser);
+    console.log("Event deleted:", selectedEvent);
     closeModal();
   };
 
   const handleEdit = (event) => {
     event.preventDefault();
-    console.log("User updated:", selectedUser);
+    console.log("Event updated:", selectedEvent);
     closeModal();
   };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Users</h1>
+      <h1 className="text-2xl font-bold mb-4">Events</h1>
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
+                Event
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
+                Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              City
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Location
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Action
@@ -77,33 +71,34 @@ const Users = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.city}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.status === "Active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
-                </td>
+            {events.map((event) => (
+              <tr key={event.id}>
+                <th
+                  scope="row"
+                  className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                >
+                  <img
+                    className="w-10 h-10 rounded-full"
+                    src={event.image}
+                    alt={`${event.name} image`}
+                  />
+                  <div className="ps-3">
+                    <div className="text-base font-semibold">{event.name}</div>
+                    <div className="font-normal text-gray-500">{event.date}</div>
+                  </div>
+                </th>
+                <td className="px-6 py-4 whitespace-nowrap">{event.date}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{event.location}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
-                    onClick={() => openEditModal(user)}
-                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 transition duration-150 ease-in-out"
+                    onClick={() => openEditModal(event)}
+                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => openDeleteModal(user)}
-                    className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out"
+                    onClick={() => openDeleteModal(event)}
+                    className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none"
                   >
                     Delete
                   </button>
@@ -114,30 +109,43 @@ const Users = () => {
         </table>
       </div>
 
-      {/* Modal de edición */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow p-6 w-1/3">
-            <h2 className="text-lg font-bold mb-4">Edit User</h2>
+            <h2 className="text-lg font-bold mb-4">Edit Event</h2>
             <form onSubmit={handleEdit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <input
                   type="text"
-                  value={selectedUser.name}
+                  value={selectedEvent.name}
                   onChange={(e) =>
-                    setSelectedUser({ ...selectedUser, name: e.target.value })
+                    setSelectedEvent({ ...selectedEvent, name: e.target.value })
                   }
                   className="w-full p-2 border rounded"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Email</label>
+                <label className="block text-sm font-medium mb-2">Date</label>
                 <input
-                  type="email"
-                  value={selectedUser.email}
+                  type="date"
+                  value={selectedEvent.date}
                   onChange={(e) =>
-                    setSelectedUser({ ...selectedUser, email: e.target.value })
+                    setSelectedEvent({ ...selectedEvent, date: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Location</label>
+                <input
+                  type="text"
+                  value={selectedEvent.location}
+                  onChange={(e) =>
+                    setSelectedEvent({
+                      ...selectedEvent,
+                      location: e.target.value,
+                    })
                   }
                   className="w-full p-2 border rounded"
                 />
@@ -161,13 +169,13 @@ const Users = () => {
           </div>
         </div>
       )}
-      {/* Modal de eliminación */}
+
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow p-6 w-1/3 text-center">
             <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
             <p className="mb-4">
-              Are you sure you want to delete <b>{selectedUser.name}</b>?
+              Are you sure you want to delete <b>{selectedEvent.name}</b>?
             </p>
             <div className="flex justify-center">
               <button
@@ -189,4 +197,5 @@ const Users = () => {
     </div>
   );
 };
-export default Users; 
+
+export default ConcertsTable;

@@ -10,7 +10,7 @@ import UserManagementPage from './components/userspage/UserManagementPage';
 import ProfilePage from './components/userspage/ProfilePage';
 import ConcertDetails from './components/ConcertDetails/ConcertDetails';
 import Checkout from './components/checkout/Checkout';
-
+import Invoice from './components/Invoice/Invoice';
 function App() {
   const isAuthenticated = UserService.isAuthenticated();
   const isAdmin = UserService.adminOnly();
@@ -30,6 +30,13 @@ function App() {
           {/* Rutas Públicas */}
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegistrationPage />} />
+          <Route path="/admin/user-management" element={<UserManagementPage />} />
+          <Route path="/update-user/:userId" element={<UpdateUser />} />
+          <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
+          <Route path="/Checkout" element={<Checkout />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
+          <Route path="/invoice" element={<Invoice />} />
 
        {/* Rutas Protegidas - Solo accesibles si el usuario está autenticado */}
 {isAuthenticated && (
@@ -43,10 +50,12 @@ function App() {
           {/* Rutas de Admin - Solo accesibles si el usuario es admin */}
           {isAuthenticated && isAdmin && (
             <>
-              <Route path="/admin/user-management" element={<UserManagementPage />} />
-              <Route path="/update-user/:userId" element={<UpdateUser />} />
-              <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
-              <Route path="/Checkout" element={<Checkout />} />
+            {/* <Route path="/admin/user-management" element={<UserManagementPage />} />*/}
+            {/*<Route path="/update-user/:userId" element={<UpdateUser />} /> */}
+            {/* <Route path="/concert-details/:artistId" element={<ConcertDetails />} />*/}
+            {/*  <Route path="/Checkout" element={<Checkout />} />*/}
+
+            
             </>
           )}
 

@@ -1,39 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Searcher = () => {
+  const [keyword, setKeyword] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!keyword) return;
+    console.log(`Buscando: ${keyword}`);
+    // Aquí podrías añadir lógica para realizar la búsqueda.
+    setKeyword("");
+  };
+
   return (
-    <section className="w-full">
-      <div
-        className="w-full h-[520px] bg-cover bg-no-repeat bg-center flex flex-col justify-center items-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1449844908441-8829872d2607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxob21lfGVufDB8MHx8fDE3MTA0MDE1NDZ8MA&ixlib=rb-4.0.3&q=80&w=1080')",
-        }}
+    <form
+      onSubmit={handleSearch}
+      className="mt-10 mx-auto max-w-xl py-2 px-6 rounded-full bg-gray-50 border flex focus-within:border-gray-300"
+    >
+      <input
+        type="text"
+        placeholder="Search anything"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        className="bg-transparent w-full focus:outline-none pr-4 font-semibold border-0 focus:ring-0 px-0 py-0"
+        name="topic"
+      />
+      <button
+        type="submit"
+        className="flex flex-row items-center justify-center min-w-[130px] px-4 rounded-full font-medium tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 transition ease-in-out duration-150 text-base bg-black text-white font-medium tracking-wide border-transparent py-1.5 h-[38px] -mr-3"
+        disabled={!keyword}
       >
-        <div>
-          <h1 className="text-white text-center xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl xs:text-xl font-semibold bg-gray-800 p-2 bg-opacity-40 rounded-sm">
-            Discover Your New Home
-          </h1>
-        </div>
-        <div className="w-full mx-auto">
-          <form>
-            <div className="xl:w-1/2 lg:w-[60%] md:w-[70%] sm:w-[70%] xs:w-[90%] mx-auto flex gap-2 md:mt-6 xs:mt-4 mx-4" style={{ marginLeft: "400px" }}>
-              <input
-                type="text"
-                className="border border-gray-400 w-full p-2 rounded-md text-xl pl-2"
-                placeholder="Enter your search"
-              />
-              <button
-                type="submit"
-                className="px-[10px] p-[10px] bg-blue-500 text-lg text-white rounded-md font-semibold"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section>
+        Search
+      </button>
+    </form>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -10,6 +11,8 @@ const Checkout = () => {
     cvv: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChangePaymentMethod = (method) => {
     setPaymentMethod(method);
   };
@@ -17,6 +20,11 @@ const Checkout = () => {
   const handleCardDetailChange = (e) => {
     const { name, value } = e.target;
     setCardDetails({ ...cardDetails, [name]: value });
+  };
+
+  const handleSubmit = () => {
+    // Aquí podrías agregar validaciones o lógica adicional antes de redirigir
+    navigate("/invoice"); // Redirige a la vista del Invoice
   };
 
   return (
@@ -121,6 +129,7 @@ const Checkout = () => {
                 </button>
                 <button
                   type="button"
+                  onClick={handleSubmit}
                   className="px-7 py-3.5 text-sm tracking-wide bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   Submit
