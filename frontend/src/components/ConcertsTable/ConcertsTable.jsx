@@ -41,13 +41,14 @@ const EventsTable = () => {
     setIsEditing(false);
     setModalData({
       name: '',
-      capacityGeneral: '',
-      capacityVip: '',
-      capacityPalco: '',
-      state: '',
-      city: '',
-      direction: '',
+      date: '',
+      hour: '',
+      description: '',
+      musicalGenre: '',
+      status: '',
       image: '',
+      place: '',
+      artist: '',
     });
     setShowModal(true);
   };
@@ -66,7 +67,7 @@ const EventsTable = () => {
         },
       });
       setEvents(events.filter(event => event.id !== selectedEvent.id));
-      setIsDeleteModalOpen(false); // Cerrar el modal después de eliminar
+      setIsDeleteModalOpen(false);
     } catch (err) {
       setError("Error al eliminar el evento.");
     }
@@ -93,7 +94,7 @@ const EventsTable = () => {
         });
       }
       setShowModal(false);
-      fetchEvents(); // Recargar la lista de eventos
+      fetchEvents(); 
     } catch (err) {
       setError("Error al guardar el evento.");
       console.error("Error saving event:", err);
@@ -103,7 +104,7 @@ const EventsTable = () => {
   // Función para cerrar el modal sin hacer cambios
   const handleCancel = () => {
     setShowModal(false);
-    setModalData(null); // Resetear los datos del modal
+    setModalData(null); 
   };
 
   return (
@@ -254,7 +255,7 @@ const EventsTable = () => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={handleCancel} // Llamamos a handleCancel para cerrar el modal sin guardar
+                  onClick={handleCancel} 
                   className="px-4 py-2 bg-gray-200 rounded mr-2"
                 >
                   Cancelar

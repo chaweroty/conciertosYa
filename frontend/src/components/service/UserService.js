@@ -65,6 +65,19 @@ class UserService{
             throw err;
         }
     }
+    static async getAllplaces(token){
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/places/get-all`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
+            }
+            throw err;
+        }
+    }
 
     static async getYourProfile(token){
         try{
