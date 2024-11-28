@@ -1,30 +1,75 @@
-import React, { useState } from "react";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-const ConcertsTable = () => {
-  const events = [
-    {
-      id: 1,
-      name: "Music Fest 2024",
-      date: "2024-12-15",
-      location: "Central Park",
-      image: "https://via.placeholder.com/150/0000FF/808080?text=Music+Fest",
-    },
-    {
-      id: 2,
-      name: "Art Exhibition",
-      date: "2024-11-25",
-      location: "Modern Art Museum",
-      image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Art+Exhibit",
-    },
-  ];
+const API_URL = "http://localhost:8080/events";
 
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const EventsTable = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modalData, setModalData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const openEditModal = (event) => {
-    setSelectedEvent(event);
-    setIsEditModalOpen(true);
+  // Token (en un caso real, obtén esto de localStorage o de un contexto global)
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJhZG1pbjZAZ21haWwuY29tIiwiaWF0IjoxNzMyNzY0NTY0LCJleHAiOjE3MzI4NTA5NjR9.dJIZTEgmRoj8iI77ECVPq5VFpiNh-Wojd-ATVVMRsVU";
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/get-all`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+        },
+      });
+      setEvents(response.data.ourEventsList || []); // Actualiza los datos de eventos
+    } catch (err) {
+      setError("Error al obtener los eventos. Verifica tu conexión o permisos.");
+      console.error("Error fetching events:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreate = () => {
+    setIsEditing(false);
+    setModalData({
+      name: '',
+      capacityGeneral: '',
+      capacityVip: '',
+      capacityPalco: '',
+      state: '',
+      city: '',
+      direction: '',
+      image: '',
+    });
+    setShowModal(true);
+  };
+
+  const handleEdit = (event) => {
+    setIsEditing(true);
+    setModalData(event);
+    setShowModal(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_URL}/delete/${selectedEvent.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setEvents(events.filter(event => event.id !== selectedEvent.id));
+      setIsDeleteModalOpen(false); // Cerrar el modal después de eliminar
+    } catch (err) {
+      setError("Error al eliminar el evento.");
+    }
   };
 
   const openDeleteModal = (event) => {
@@ -32,165 +77,197 @@ const ConcertsTable = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const closeModal = () => {
-    setSelectedEvent(null);
-    setIsEditModalOpen(false);
-    setIsDeleteModalOpen(false);
+  const handleSave = async () => {
+    try {
+      if (isEditing) {
+        await axios.put(`${API_URL}/update`, modalData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        await axios.post(`${API_URL}/create`, modalData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      setShowModal(false);
+      fetchEvents(); // Recargar la lista de eventos
+    } catch (err) {
+      setError("Error al guardar el evento.");
+      console.error("Error saving event:", err);
+    }
   };
 
-  const handleDelete = () => {
-    console.log("Event deleted:", selectedEvent);
-    closeModal();
-  };
-
-  const handleEdit = (event) => {
-    event.preventDefault();
-    console.log("Event updated:", selectedEvent);
-    closeModal();
+  // Función para cerrar el modal sin hacer cambios
+  const handleCancel = () => {
+    setShowModal(false);
+    setModalData(null); // Resetear los datos del modal
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Events</h1>
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Event
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Location
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {events.map((event) => (
-              <tr key={event.id}>
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                >
-                  <img
-                    className="w-10 h-10 rounded-full"
-                    src={event.image}
-                    alt={`${event.name} image`}
-                  />
-                  <div className="ps-3">
-                    <div className="text-base font-semibold">{event.name}</div>
-                    <div className="font-normal text-gray-500">{event.date}</div>
-                  </div>
-                </th>
-                <td className="px-6 py-4 whitespace-nowrap">{event.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{event.location}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    onClick={() => openEditModal(event)}
-                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(event)}
-                    className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Eventos</h1>
 
-      {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow p-6 w-1/3">
-            <h2 className="text-lg font-bold mb-4">Edit Event</h2>
-            <form onSubmit={handleEdit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Name</label>
-                <input
-                  type="text"
-                  value={selectedEvent.name}
-                  onChange={(e) =>
-                    setSelectedEvent({ ...selectedEvent, name: e.target.value })
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Date</label>
-                <input
-                  type="date"
-                  value={selectedEvent.date}
-                  onChange={(e) =>
-                    setSelectedEvent({ ...selectedEvent, date: e.target.value })
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Location</label>
-                <input
-                  type="text"
-                  value={selectedEvent.location}
-                  onChange={(e) =>
-                    setSelectedEvent({
-                      ...selectedEvent,
-                      location: e.target.value,
-                    })
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-gray-200 rounded mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
+      {/* Mensaje de carga */}
+      {loading && <p>Cargando eventos...</p>}
+
+      {/* Mensaje de error */}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* Tabla de eventos */}
+      {!loading && !error && (
+        <div>
+          <button
+            onClick={handleCreate}
+            className="mb-4 p-2 bg-blue-500 text-white rounded"
+          >
+            Crear Evento
+          </button>
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 px-4 py-2">Nombre</th>
+                <th className="border border-gray-300 px-4 py-2">Fecha</th>
+                <th className="border border-gray-300 px-4 py-2">Hora</th>
+                <th className="border border-gray-300 px-4 py-2">Descripción</th>
+                <th className="border border-gray-300 px-4 py-2">Estado</th>
+                <th className="border border-gray-300 px-4 py-2">Lugar</th>
+                <th className="border border-gray-300 px-4 py-2">Artista</th>
+                <th className="border border-gray-300 px-4 py-2">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr key={event.id} className="hover:bg-gray-100">
+                  <td className="border border-gray-300 px-4 py-2">{event.name}</td>
+                  <td className="border border-gray-300 px-4 py-2">{event.date}</td>
+                  <td className="border border-gray-300 px-4 py-2">{event.hour}</td>
+                  <td className="border border-gray-300 px-4 py-2">{event.description}</td>
+                  <td className="border border-gray-300 px-4 py-2">{event.status}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <div>
+                      <p><strong>Nombre:</strong> {event.place.name}</p>
+                      <p><strong>Ciudad:</strong> {event.place.city}</p>
+                    </div>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <div>
+                      <p><strong>Nombre:</strong> {event.artist.name}</p>
+                      <p><strong>Género:</strong> {event.artist.musicalGenre}</p>
+                    </div>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      onClick={() => handleEdit(event)}
+                      className="px-4 py-2 bg-yellow-500 text-white rounded mr-2"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => openDeleteModal(event)}
+                      className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
-      {isDeleteModalOpen && (
+      {/* Modal de confirmación de eliminación */}
+      {isDeleteModalOpen && selectedEvent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow p-6 w-1/3 text-center">
-            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+            <h2 className="text-lg font-bold mb-4">Confirmar Eliminación</h2>
             <p className="mb-4">
-              Are you sure you want to delete <b>{selectedEvent.name}</b>?
+              ¿Estás seguro de que quieres eliminar <b>{selectedEvent.name}</b>?
             </p>
             <div className="flex justify-center">
               <button
-                onClick={closeModal}
+                onClick={() => setIsDeleteModalOpen(false)}
                 className="px-4 py-2 bg-gray-200 rounded mr-2"
               >
-                Cancel
+                Cancelar
               </button>
               <button
                 onClick={handleDelete}
                 className="px-4 py-2 bg-red-600 text-white rounded"
               >
-                Delete
+                Eliminar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de creación/edición de eventos */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-lg font-bold mb-4">{isEditing ? "Editar Evento" : "Crear Evento"}</h2>
+            <form>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Nombre del Evento</label>
+                <input
+                  type="text"
+                  value={modalData.name}
+                  onChange={(e) => setModalData({ ...modalData, name: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="Nombre"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Fecha</label>
+                <input
+                  type="date"
+                  value={modalData.date}
+                  onChange={(e) => setModalData({ ...modalData, date: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Hora</label>
+                <input
+                  type="time"
+                  value={modalData.hour}
+                  onChange={(e) => setModalData({ ...modalData, hour: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Descripción</label>
+                <textarea
+                  value={modalData.description}
+                  onChange={(e) => setModalData({ ...modalData, description: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="Descripción"
+                />
+              </div>
+
+              {/* Otros campos de evento aquí... */}
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleCancel} // Llamamos a handleCancel para cerrar el modal sin guardar
+                  className="px-4 py-2 bg-gray-200 rounded mr-2"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Guardar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -198,4 +275,4 @@ const ConcertsTable = () => {
   );
 };
 
-export default ConcertsTable;
+export default EventsTable;

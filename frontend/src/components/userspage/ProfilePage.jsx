@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import UserService from '../service/UserService';
 import { Link } from 'react-router-dom';
 import Hero from '../Hero/Hero';
-import Service from '../Services/Service';
 import Concerts from '../Concerts/Concerts';
 import Posters from '../Posters/Posters';
 import Searcher from '../Searcher/Searcher';

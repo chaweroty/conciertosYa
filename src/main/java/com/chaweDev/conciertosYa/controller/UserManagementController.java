@@ -24,20 +24,17 @@ public class UserManagementController {
     public ResponseEntity<ReqRes> login(@RequestBody ReqRes req){
         return ResponseEntity.ok(usersManagementService.login(req));
     }
-
-
     @PostMapping("/auth/refresh")
     public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes req){
         return ResponseEntity.ok(usersManagementService.refreshToken(req));
     }
-
     @GetMapping("/auth/get-all-users")
     public ResponseEntity<ReqRes> getAllUsers() {
         ReqRes response = usersManagementService.getAllUsers();
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/admin/get-users/{userId}")
+    @GetMapping("/auth/get-users/{userId}")
     public ResponseEntity<ReqRes> getUSerByID(@PathVariable Integer userId){
         return ResponseEntity.ok(usersManagementService.getUsersById(userId));
 

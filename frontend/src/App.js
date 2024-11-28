@@ -11,69 +11,48 @@ import ProfilePage from './components/userspage/ProfilePage';
 import ConcertDetails from './components/ConcertDetails/ConcertDetails';
 import Checkout from './components/checkout/Checkout';
 import Invoice from './components/Invoice/Invoice';
+import { PrivateRoute, AdminRoute } from './components/routes/ProtectedRoutes';
+
+
 function App() {
-  const isAuthenticated = UserService.isAuthenticated();
-  const isAdmin = UserService.adminOnly();
-  
-  // Obtiene la ruta actual utilizando useLocation
   const location = useLocation();
-  const isLoginOrRegister = location.pathname === "/login" || location.pathname === "/register";
+  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
 
   return (
-    <div className="App">
-      {/* Condicional para no mostrar Navbar ni Footer en login o register */}
-      {/* */}
-      {!isLoginOrRegister && <Navbar />}
-      
-      <div className="content">
-        <Routes>
-          {/* Rutas Públicas */}
-          <Route exact path="/login" element={<LoginPage />} />
-          <Route exact path="/register" element={<RegistrationPage />} />
-          <Route path="/admin/user-management" element={<UserManagementPage />} />
-          <Route path="/update-user/:userId" element={<UpdateUser />} />
-          <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
-          <Route path="/Checkout" element={<Checkout />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
-          <Route path="/invoice" element={<Invoice />} />
+      <div className="App">
+          {!isLoginOrRegister && <Navbar />}
+          <div className="content">
+              <Routes>
+                  {/* Rutas Públicas */}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegistrationPage />} />
 
-       {/* Rutas Protegidas - Solo accesibles si el usuario está autenticado */}
-{isAuthenticated && (
-  <>
-    <Route path="/profile" element={<ProfilePage />} />
-    <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
-  </>
-)}
+                  {/* Rutas Protegidas para Usuarios Autenticados */}
+                  <Route element={<PrivateRoute />}>
+                      <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/invoice" element={<Invoice />} />
+                  </Route>
 
+                  {/* Rutas Exclusivas para Administradores */}
+                  <Route element={<AdminRoute />}>
+                      <Route path="/admin/user-management" element={<UserManagementPage />} />
+                      <Route path="/update-user/:userId" element={<UpdateUser />} />
+                  </Route>
 
-          {/* Rutas de Admin - Solo accesibles si el usuario es admin */}
-          {isAuthenticated && isAdmin && (
-            <>
-            {/* <Route path="/admin/user-management" element={<UserManagementPage />} />*/}
-            {/*<Route path="/update-user/:userId" element={<UpdateUser />} /> */}
-            {/* <Route path="/concert-details/:artistId" element={<ConcertDetails />} />*/}
-            {/*  <Route path="/Checkout" element={<Checkout />} />*/}
-
-            
-            </>
-          )}
-
-          {/* Redirecciona a login si ninguna ruta coincide */}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
+                  {/* Ruta por defecto */}
+                  <Route path="*" element={<Navigate to="/login" />} />
+              </Routes>
+          </div>
+          {!isLoginOrRegister && <FooterComponent />}
       </div>
-
-      {/* Condicional para no mostrar el Footer en login o register */}
-      {!isLoginOrRegister && <FooterComponent />}
-    </div>
-  );
-}
+  )}
 
 export default function AppWrapper() {
   return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+      <BrowserRouter>
+          <App />
+      </BrowserRouter>
   );
 }

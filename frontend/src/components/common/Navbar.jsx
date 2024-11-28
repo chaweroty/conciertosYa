@@ -1,18 +1,16 @@
-// Navbar.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserService from '../service/UserService';
 
 function Navbar() {
     const isAuthenticated = UserService.isAuthenticated();
-    const isAdmin = UserService.isAdmin();
+    const isAdmin = UserService.adminOnly();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        const confirmDelete = window.confirm('Are you sure you want to logout this user?');
-        if (confirmDelete) {
+        if (window.confirm('Are you sure you want to logout?')) {
             UserService.logout();
-            navigate("/login"); // Redirige al usuario al login después de cerrar sesión
+            navigate('/login');
         }
     };
 

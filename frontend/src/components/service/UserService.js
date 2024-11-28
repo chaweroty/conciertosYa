@@ -26,17 +26,45 @@ class UserService{
     }
 
     static async getAllUsers(token){
-        try{
-            const response = await axios.get(`${UserService.BASE_URL}/admin/get-all-users`, 
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/admin/get-all-users`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             return response.data;
-        }catch(err){
+        } catch (err) {
+            if (err.response) {
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
+            }
+            throw err;
+        }
+    }
+    static async getAllartists(token){
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/artists/get-all`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
+            }
             throw err;
         }
     }
 
+    static async getAllconcerts(token){
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/events/get-all`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
+            }
+            throw err;
+        }
+    }
 
     static async getYourProfile(token){
         try{
@@ -73,6 +101,8 @@ class UserService{
             throw err;
         }
     }
+
+ 
 
 
     static async updateUser(userId, userData, token){

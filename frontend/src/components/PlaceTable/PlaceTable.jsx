@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 
 const PlaceTable = () => {
-  const places = [
+  const [places, setPlaces] = useState([
     { name: "Stadium A", location: "City X", capacity: 50000 },
     { name: "Arena B", location: "City Y", capacity: 20000 },
-  ];
+  ]);
 
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newPlace, setNewPlace] = useState({
+    name: "",
+    location: "",
+    capacity: "",
+  });
 
   const openEditModal = (place) => {
     setSelectedPlace(place);
@@ -20,26 +26,48 @@ const PlaceTable = () => {
     setIsDeleteModalOpen(true);
   };
 
+  const openCreateModal = () => {
+    setNewPlace({ name: "", location: "", capacity: "" });
+    setIsCreateModalOpen(true);
+  };
+
   const closeModal = () => {
     setSelectedPlace(null);
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
+    setIsCreateModalOpen(false);
   };
 
   const handleDelete = () => {
-    console.log("Place deleted:", selectedPlace);
+    setPlaces(places.filter((place) => place !== selectedPlace));
     closeModal();
   };
 
   const handleEdit = (event) => {
     event.preventDefault();
-    console.log("Place updated:", selectedPlace); 
+    setPlaces(
+      places.map((place) =>
+        place === selectedPlace ? { ...selectedPlace } : place
+      )
+    );
+    closeModal();
+  };
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    setPlaces([...places, { ...newPlace, capacity: parseInt(newPlace.capacity) }]);
     closeModal();
   };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Places</h1>
+      <button
+        onClick={openCreateModal}
+        className="mb-4 px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-500 focus:outline-none"
+      >
+        Add Place
+      </button>
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead>
@@ -84,48 +112,46 @@ const PlaceTable = () => {
         </table>
       </div>
 
-      {isEditModalOpen && (
+      {/* Create Modal */}
+      {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow p-6 w-1/3">
-            <h2 className="text-lg font-bold mb-4">Edit Place</h2>
-            <form onSubmit={handleEdit}>
+            <h2 className="text-lg font-bold mb-4">Add New Place</h2>
+            <form onSubmit={handleCreate}>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Name</label>
                 <input
                   type="text"
-                  value={selectedPlace.name}
+                  value={newPlace.name}
                   onChange={(e) =>
-                    setSelectedPlace({ ...selectedPlace, name: e.target.value })
+                    setNewPlace({ ...newPlace, name: e.target.value })
                   }
                   className="w-full p-2 border rounded"
+                  placeholder="Place Name"
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Location</label>
                 <input
                   type="text"
-                  value={selectedPlace.location}
+                  value={newPlace.location}
                   onChange={(e) =>
-                    setSelectedPlace({
-                      ...selectedPlace,
-                      location: e.target.value,
-                    })
+                    setNewPlace({ ...newPlace, location: e.target.value })
                   }
                   className="w-full p-2 border rounded"
+                  placeholder="Location"
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Capacity</label>
                 <input
                   type="number"
-                  value={selectedPlace.capacity}
+                  value={newPlace.capacity}
                   onChange={(e) =>
-                    setSelectedPlace({
-                      ...selectedPlace,
-                      capacity: parseInt(e.target.value),
-                    })
+                    setNewPlace({ ...newPlace, capacity: e.target.value })
                   }
                   className="w-full p-2 border rounded"
+                  placeholder="Capacity"
                 />
               </div>
               <div className="flex justify-end">
@@ -138,9 +164,9 @@ const PlaceTable = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                  className="px-4 py-2 bg-green-600 text-white rounded"
                 >
-                  Save Changes
+                  Create
                 </button>
               </div>
             </form>
@@ -148,6 +174,19 @@ const PlaceTable = () => {
         </div>
       )}
 
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow p-6 w-1/3">
+            <h2 className="text-lg font-bold mb-4">Edit Place</h2>
+            <form onSubmit={handleEdit}>
+              {/* Similar to your original code */}
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow p-6 w-1/3 text-center">
@@ -175,4 +214,5 @@ const PlaceTable = () => {
     </div>
   );
 };
+
 export default PlaceTable;
