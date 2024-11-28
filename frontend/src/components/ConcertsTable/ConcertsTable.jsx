@@ -14,8 +14,7 @@ const EventsTable = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Token (en un caso real, obtén esto de localStorage o de un contexto global)
-  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJhZG1pbjZAZ21haWwuY29tIiwiaWF0IjoxNzMyNzY0NTY0LCJleHAiOjE3MzI4NTA5NjR9.dJIZTEgmRoj8iI77ECVPq5VFpiNh-Wojd-ATVVMRsVU";
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -81,13 +80,13 @@ const EventsTable = () => {
   const handleSave = async () => {
     try {
       if (isEditing) {
-        await axios.put(`${API_URL}/update`, modalData, {
+        await axios.put(`${API_URL}/update/`, modalData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
       } else {
-        await axios.post(`${API_URL}/create`, modalData, {
+        await axios.post(`${API_URL}/add`, modalData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

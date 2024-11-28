@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import UserService from '../service/UserService';
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const API_URL = "http://localhost:8080/auth";
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -16,7 +18,13 @@ const Users = () => {
       }
 
       try {
-        const data = await UserService.getAllUsers(token);
+        setLoading(true);
+        const response = await axios.get(`${API_URL}/get-all-users`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+          },
+        });
+        const data = response.data.ourUsersList;
         console.log("Datos recibidos:", data);
         setUsers(data); // Asegúrate de que el backend envíe la lista de usuarios correctamente.
         setLoading(false);
