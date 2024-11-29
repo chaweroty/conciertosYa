@@ -6,7 +6,7 @@ const Dashboard = () => {
     <section class="grid gap-6 md:grid-cols-3 p-4 md:p-8 max-w-5xl mx-auto w-full ">
         <div class="p-6 bg-white shadow rounded-2xl dark:bg-gray-900">
             <dl class="space-y-2">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Unique views</dt>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Usuarios Registrados</dt>
 
                 <dd class="text-5xl font-light md:text-6xl dark:text-white">192.1k</dd>
 
@@ -25,7 +25,7 @@ const Dashboard = () => {
 
         <div class="p-6 bg-white shadow rounded-2xl dark:bg-gray-900">
             <dl class="space-y-2">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Bounce rate</dt>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Eventos</dt>
 
                 <dd class="text-5xl font-light md:text-6xl dark:text-white">21%</dd>
 
@@ -44,7 +44,7 @@ const Dashboard = () => {
 
         <div class="p-6 bg-white shadow rounded-2xl dark:bg-gray-900">
             <dl class="space-y-2">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Average time on page</dt>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Facturación total:</dt>
 
                 <dd class="text-5xl font-light md:text-6xl dark:text-white">03:12</dd>
 

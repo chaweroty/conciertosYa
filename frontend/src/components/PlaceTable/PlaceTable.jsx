@@ -1,24 +1,76 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+const API_URL = "http://localhost:8080/places";
 
 const PlaceTable = () => {
-  const [places, setPlaces] = useState([
-    { name: "Stadium A", location: "City X", capacity: 50000 },
-    { name: "Arena B", location: "City Y", capacity: 20000 },
-  ]);
-
-  const [selectedPlace, setSelectedPlace] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modalData, setModalData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newPlace, setNewPlace] = useState({
-    name: "",
-    location: "",
-    capacity: "",
-  });
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
-  const openEditModal = (place) => {
-    setSelectedPlace(place);
-    setIsEditModalOpen(true);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  const fetchPlaces = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/get-all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPlaces(response.data.ourPlacesList || []);
+    } catch (err) {
+      setError(
+        "Error al obtener los lugares. Verifica tu conexión o permisos."
+      );
+      console.error("Error fetching places:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreate = () => {
+    setIsEditing(false);
+    setModalData({
+      name: "",
+      capacityGeneral: "",
+      capacityVip: "",
+      capacityPalco: "",
+      state: "",
+      city: "",
+      direction: "",
+      image: "",
+    });
+    setShowModal(true);
+  };
+
+  const handleEdit = (place) => {
+    setIsEditing(true);
+    setModalData(place);
+    setShowModal(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_URL}/delete/${selectedPlace.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPlaces(places.filter((place) => place.id !== selectedPlace.id));
+      setIsDeleteModalOpen(false);
+    } catch (err) {
+      setError("Error al eliminar el lugar.");
+    }
   };
 
   const openDeleteModal = (place) => {
@@ -26,188 +78,291 @@ const PlaceTable = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const openCreateModal = () => {
-    setNewPlace({ name: "", location: "", capacity: "" });
-    setIsCreateModalOpen(true);
+  const validateData = () => {
+    const {
+      name,
+      capacityGeneral,
+      capacityVip,
+      capacityPalco,
+      state,
+      city,
+      direction,
+      image,
+    } = modalData;
+    if (
+      !name ||
+      !capacityGeneral ||
+      !capacityVip ||
+      !capacityPalco ||
+      !state ||
+      !city ||
+      !direction ||
+      !image
+    ) {
+      setError("Todos los campos son obligatorios.");
+      return false;
+    }
+    return true;
   };
-
-  const closeModal = () => {
-    setSelectedPlace(null);
-    setIsEditModalOpen(false);
-    setIsDeleteModalOpen(false);
-    setIsCreateModalOpen(false);
+  const handleSave = async () => {
+    if (!validateData()) {
+      return;
+    }
+    try {
+      if (isEditing) {
+        await axios.put(`${API_URL}/update/${modalData.id}`, modalData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } else {
+        await axios.post(`${API_URL}/add`, modalData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      setShowModal(false);
+      fetchPlaces();
+    } catch (err) {
+      setError("Error al guardar el evento.");
+      console.error("Error saving event:", err);
+    }
   };
-
-  const handleDelete = () => {
-    setPlaces(places.filter((place) => place !== selectedPlace));
-    closeModal();
-  };
-
-  const handleEdit = (event) => {
-    event.preventDefault();
-    setPlaces(
-      places.map((place) =>
-        place === selectedPlace ? { ...selectedPlace } : place
-      )
-    );
-    closeModal();
-  };
-
-  const handleCreate = (event) => {
-    event.preventDefault();
-    setPlaces([...places, { ...newPlace, capacity: parseInt(newPlace.capacity) }]);
-    closeModal();
+  const handleCancel = () => {
+    setShowModal(false);
+    setModalData(null);
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Places</h1>
-      <button
-        onClick={openCreateModal}
-        className="mb-4 px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-500 focus:outline-none"
-      >
-        Add Place
-      </button>
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Location
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Capacity
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {places.map((place, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">{place.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{place.location}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{place.capacity}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    onClick={() => openEditModal(place)}
-                    className="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(place)}
-                    className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none"
-                  >
-                    Delete
-                  </button>
-                </td>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Lugares</h1>
+
+      {loading && <p>Cargando lugares...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {!loading && !error && (
+        <div>
+          <button
+            onClick={handleCreate}
+            className="mb-4 p-2 bg-blue-500 text-white rounded"
+          >
+            Crear Lugar
+          </button>
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 px-4 py-2">Nombre</th>
+                <th className="border border-gray-300 px-4 py-2">Dirección</th>
+                <th className="border border-gray-300 px-4 py-2">Ciudad</th>
+                <th className="border border-gray-300 px-4 py-2">
+                  Capacidad General
+                </th>
+                <th className="border border-gray-300 px-4 py-2">
+                  Capacidad VIP
+                </th>
+                <th className="border border-gray-300 px-4 py-2">
+                  Capacidad Palco
+                </th>
+                <th className="border border-gray-300 px-4 py-2">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Create Modal */}
-      {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow p-6 w-1/3">
-            <h2 className="text-lg font-bold mb-4">Add New Place</h2>
-            <form onSubmit={handleCreate}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Name</label>
-                <input
-                  type="text"
-                  value={newPlace.name}
-                  onChange={(e) =>
-                    setNewPlace({ ...newPlace, name: e.target.value })
-                  }
-                  className="w-full p-2 border rounded"
-                  placeholder="Place Name"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Location</label>
-                <input
-                  type="text"
-                  value={newPlace.location}
-                  onChange={(e) =>
-                    setNewPlace({ ...newPlace, location: e.target.value })
-                  }
-                  className="w-full p-2 border rounded"
-                  placeholder="Location"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Capacity</label>
-                <input
-                  type="number"
-                  value={newPlace.capacity}
-                  onChange={(e) =>
-                    setNewPlace({ ...newPlace, capacity: e.target.value })
-                  }
-                  className="w-full p-2 border rounded"
-                  placeholder="Capacity"
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-gray-200 rounded mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-600 text-white rounded"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
-          </div>
+            </thead>
+            <tbody>
+              {places.map((place) => (
+                <tr key={place.id} className="hover:bg-gray-100">
+                  <td className="border border-gray-300 px-4 py-2">
+                    {place.name}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {place.address}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {place.city}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {place.capacityGeneral}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {place.capacityVip}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {place.capacityPalco}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      onClick={() => handleEdit(place)}
+                      className="px-4 py-2 bg-yellow-500 text-white rounded mr-2"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => openDeleteModal(place)}
+                      className="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
-      {/* Edit Modal */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow p-6 w-1/3">
-            <h2 className="text-lg font-bold mb-4">Edit Place</h2>
-            <form onSubmit={handleEdit}>
-              {/* Similar to your original code */}
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Modal */}
-      {isDeleteModalOpen && (
+      {isDeleteModalOpen && selectedPlace && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow p-6 w-1/3 text-center">
-            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+            <h2 className="text-lg font-bold mb-4">Confirmar Eliminación</h2>
             <p className="mb-4">
-              Are you sure you want to delete <b>{selectedPlace.name}</b>?
+              ¿Estás seguro de que quieres eliminar <b>{selectedPlace.name}</b>?
             </p>
             <div className="flex justify-center">
               <button
-                onClick={closeModal}
+                onClick={() => setIsDeleteModalOpen(false)}
                 className="px-4 py-2 bg-gray-200 rounded mr-2"
               >
-                Cancel
+                Cancelar
               </button>
               <button
                 onClick={handleDelete}
                 className="px-4 py-2 bg-red-600 text-white rounded"
               >
-                Delete
+                Eliminar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-screen overflow-y-auto">
+            <h2 className="text-lg font-bold mb-4">
+              {isEditing ? "Editar Lugar" : "Crear Lugar"}
+            </h2>
+            <form>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Nombre</label>
+                <input
+                  type="text"
+                  value={modalData.name}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, name: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Capacida de General
+                </label>
+                <input
+                  type="text"
+                  value={modalData.capacityGeneral}
+                  onChange={(e) =>
+                    setModalData({
+                      ...modalData,
+                      capacityGeneral: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Capacida de VIP
+                </label>
+                <input
+                  type="text"
+                  value={modalData.capacityVip}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, capacityVip: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Capacida de palco
+                </label>
+                <input
+                  type="text"
+                  value={modalData.capacityPalco}
+                  onChange={(e) =>
+                    setModalData({
+                      ...modalData,
+                      capacityPalco: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Estado</label>
+                <input
+                  type="text"
+                  value={modalData.state}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, state: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">ciudad</label>
+                <input
+                  type="text"
+                  value={modalData.city}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, city: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Direccion</label>
+                <input
+                  type="text"
+                  value={modalData.direction}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, direction: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">Imagen</label>
+                <input
+                  type="number"
+                  value={modalData.image}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, image: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleCancel}
+                  className="px-4 py-2 bg-gray-300 rounded mr-2"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Guardar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
