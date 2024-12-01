@@ -28,6 +28,9 @@ function LoginPage() {
       }, 5000);
     }
   };
+  const handleRegisterClick = () => {
+    navigate("/register"); // Cambia "/register" por la ruta de tu página de registro.
+  };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -63,7 +66,11 @@ function LoginPage() {
             Sign in
           </button>
           <label htmlFor="email" className="block text-sm font-medium text-gray-900">Si no tienes una cuenta, te puedes registrar!</label>
-          <button type="submit" className="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          <button
+            type="button" 
+            onClick={handleRegisterClick}
+            className="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
             Register
           </button>
         </form>

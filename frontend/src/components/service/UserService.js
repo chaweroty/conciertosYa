@@ -13,17 +13,15 @@ class UserService{
         }
     }
 
-    static async register(userData, token){
-        try{
-            const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData, 
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+    static async register(userData) {
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData);
             return response.data;
-        }catch(err){
+        } catch (err) {
             throw err;
         }
     }
+    
 
     //CRUD methods artists
     static async getAllUsers(token){
@@ -53,11 +51,17 @@ class UserService{
             throw err;
         }
     }
-    static async createArtist(token){
+    static async createArtist(token, artistData) {
         try {
-            const response = await axios.get(`${UserService.BASE_URL}/artists/add`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await axios.post(
+                `${UserService.BASE_URL}/artists/add`, 
+                artistData, // Asegúrate de enviar los datos del artista aquí
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             return response.data;
         } catch (err) {
             if (err.response) {

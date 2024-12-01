@@ -25,17 +25,10 @@ function ProfilePage() {
     return (
         <div className="profile-page-container">
             <Hero/>
-            <Searcher/>
-            <Posters/>
-           
-            <h2>Profile Information</h2>
-            <p>Name: {profileInfo.name}</p>
-            <p>Email: {profileInfo.email}</p>
-            <p>City: {profileInfo.city}</p>
-            {profileInfo.role === "ADMIN" && (
-                <button><Link to={`/update-user/${profileInfo.id}`}>Update This Profile</Link></button>
-            )}
-             
+            <div className="flex justify-center items-center py-10">
+                <Searcher />
+            </div>
+            <Posters/>         
         </div>
     );
 }
