@@ -22,7 +22,7 @@ public class InvoiceDetailManagementService {
         try {
             InvoiceDetail savedInvoiceDetail = new InvoiceDetail();
 
-            saveInvoiceDetail(savedInvoiceDetail, invoiceDetail.getQuantity(), invoiceDetail.getUnitPrice(), invoiceDetail.getDiscount(), invoiceDetail.getTotalPrice(), invoiceDetail.getTicket(), invoiceDetail.getInvoice());
+            saveInvoiceDetail(savedInvoiceDetail, invoiceDetail.getTicket(), invoiceDetail.getInvoice());
 
             InvoiceDetail updatedInvoiceDetail = invoiceDetailRepo.save(savedInvoiceDetail);
 
@@ -81,7 +81,7 @@ public class InvoiceDetailManagementService {
             if (existingInvoiceDetailOpt.isPresent()) {
                 InvoiceDetail existingInvoiceDetail = existingInvoiceDetailOpt.get();
 
-                saveInvoiceDetail(existingInvoiceDetail, invoiceDetail.getQuantity(), invoiceDetail.getUnitPrice(), invoiceDetail.getDiscount(), invoiceDetail.getTotalPrice(), invoiceDetail.getTicket(), invoiceDetail.getInvoice());
+                saveInvoiceDetail(existingInvoiceDetail, invoiceDetail.getTicket(), invoiceDetail.getInvoice());
 
 
                 InvoiceDetail updatedInvoiceDetail = invoiceDetailRepo.save(existingInvoiceDetail);
@@ -100,11 +100,7 @@ public class InvoiceDetailManagementService {
         return response;
     }
 
-    private void saveInvoiceDetail(InvoiceDetail existingInvoiceDetail, Integer quantity, Double unitPrice, Double discount, Double totalPrice, OurTickets ticket, Invoice invoice) {
-        existingInvoiceDetail.setQuantity(quantity);
-        existingInvoiceDetail.setUnitPrice(unitPrice);
-        existingInvoiceDetail.setDiscount(discount);
-        existingInvoiceDetail.setTotalPrice(totalPrice);
+    private void saveInvoiceDetail(InvoiceDetail existingInvoiceDetail, OurTickets ticket, Invoice invoice) {
         existingInvoiceDetail.setTicket(ticket);
         existingInvoiceDetail.setInvoice(invoice);
     }

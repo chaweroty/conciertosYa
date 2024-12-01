@@ -1,6 +1,9 @@
 package com.chaweDev.conciertosYa.controller;
 
 import com.chaweDev.conciertosYa.dto.InvoiceDTO;
+import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
+import com.chaweDev.conciertosYa.dto.InvoiceRequestDTO;
+import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
 import com.chaweDev.conciertosYa.entity.Invoice;
 import com.chaweDev.conciertosYa.service.InvoiceManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +18,8 @@ public class InvoiceManagementController {
     private InvoiceManagementService invoiceManagementService;
 
     @PostMapping("/add")
-    public ResponseEntity<InvoiceDTO> addInvoice(@RequestBody InvoiceDTO invoice) {
-        InvoiceDTO response = invoiceManagementService.addInvoice(invoice);
+    public ResponseEntity<InvoiceDTO> addInvoice(@RequestBody InvoiceRequestDTO request) {
+        InvoiceDTO response = invoiceManagementService.addInvoice(request);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

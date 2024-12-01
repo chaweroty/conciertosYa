@@ -18,10 +18,6 @@ public class InvoiceDetailDTO {
     private String error;
     private String message;
     private Integer id;
-    private Integer quantity;
-    private Double unitPrice;
-    private Double discount;
-    private Double totalPrice;
     private OurTickets ticket;
     private Invoice invoice;
 

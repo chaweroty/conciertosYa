@@ -11,10 +11,6 @@ public class InvoiceDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer quantity;
-    private Double unitPrice;
-    private Double discount;
-    private Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
@@ -28,10 +24,6 @@ public class InvoiceDetail {
     public String toString() {
         return "InvoiceDetail{" +
                 "id=" + id +
-                ", quantity=" + quantity +
-                ", unitPrice=" + unitPrice +
-                ", discount=" + discount +
-                ", totalPrice=" + totalPrice +
                 ", ticket=" + ticket +
                 ", invoice=" + invoice +
                 '}';
