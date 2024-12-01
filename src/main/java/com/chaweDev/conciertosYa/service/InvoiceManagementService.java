@@ -1,15 +1,15 @@
 package com.chaweDev.conciertosYa.service;
 
-import com.chaweDev.conciertosYa.dto.InvoiceDTO;
-import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
-import com.chaweDev.conciertosYa.dto.InvoiceRequestDTO;
-import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
+import com.chaweDev.conciertosYa.dto.*;
 import com.chaweDev.conciertosYa.entity.Invoice;
-import com.chaweDev.conciertosYa.entity.OurSeats;
+import com.chaweDev.conciertosYa.entity.OurTickets;
+import com.chaweDev.conciertosYa.entity.InvoiceDetail;
 import com.chaweDev.conciertosYa.repository.InvoiceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,55 +28,96 @@ public class InvoiceManagementService {
     @Autowired
     private SeatManagementService seatService;
 
-    public InvoiceDTO addInvoice(InvoiceRequestDTO invoiceRequestDTO) {
-        InvoiceDTO response = new InvoiceDTO();
+    @Transactional
+    public InvoiceRequestDTO addInvoice(InvoiceRequestDTO invoiceRequestDTO) {
+        InvoiceRequestDTO response = new InvoiceRequestDTO();
         try {
-            // Crear y guardar la factura principal
+
+            System.out.println("Inicio del método addInvoice");
+            System.out.println("Datos recibidos: " + invoiceRequestDTO);
+
+            // Crear y guardar la factura
             Invoice savedInvoice = new Invoice();
             savedInvoice.setIssueDate(invoiceRequestDTO.getIssueDate());
             savedInvoice.setTotal(invoiceRequestDTO.getTotal());
             savedInvoice.setPaymentMethod(invoiceRequestDTO.getPaymentMethod());
             savedInvoice.setClient(invoiceRequestDTO.getClient());
 
+            System.out.println("Guardando factura...");
             Invoice ourInvoiceResult = invoiceRepo.save(savedInvoice);
 
             if (ourInvoiceResult.getId() > 0) {
-                response.setOurInvoice(ourInvoiceResult);
-                response.setMessage("Invoice saved successfully.");
-                response.setStatusCode(200);
+                System.out.println("Factura guardada con ID: " + ourInvoiceResult.getId());
 
-                // Llamar a los métodos de InvoiceDetailManagementService para guardar los detalles de la factura
-                for (OurSeats seat : invoiceRequestDTO.getOurSeatsList()) {
-                    Double price = seatService.getSeatById(seat.getId()).getPrice();
-                    Double discount = seatService.getSeatById(seat.getId()).getDiscount();
+                // Crear listas para almacenar los tickets y detalles de la factura
+                List<OurTickets> ticketList = new ArrayList<>();
+                List<InvoiceDetail> detailList = new ArrayList<>();
+
+                // Guardar los detalles de la factura
+                for (Integer seat : invoiceRequestDTO.getOurSeatsList()) {
+                    System.out.println("Procesando asiento con ID: " + seat);
+
+                    // Obtener información del asiento
+                    OurSeatsDTO seatData = seatService.getSeatById(seat);
+                    System.out.println("Datos del asiento: " + seatData);
+
+                    Double price = seatData.getOurSeats().getPrice();
+                    Double discount = seatData.getDiscount();
+
                     OurTicketsDTO ticket = new OurTicketsDTO();
-                    ticket.setBuyingDate(invoiceRequestDTO.getBuyingDate());
-                    ticket.setDiscount(discount);
-                    ticket.setPrice(price);
-                    ticket.setPriceWithDiscount(price - price*(discount/100));
-                    ticket.setSeat(seat);
+                    if (discount != null) {
+                        ticket.setBuyingDate(invoiceRequestDTO.getBuyingDate());
+                        ticket.setDiscount(discount);
+                        ticket.setPrice(price);
+                        ticket.setPriceWithDiscount(price - (price * (discount / 100)));
+                    } else {
+                        ticket.setBuyingDate(invoiceRequestDTO.getBuyingDate());
+                        ticket.setDiscount(discount);
+                        ticket.setPrice(price);
+                        ticket.setPriceWithDiscount(price);
+                    }
+                    ticket.setSeat(seatData.getOurSeats());
                     ticket.setClient(invoiceRequestDTO.getClient());
                     ticket.setEvent(invoiceRequestDTO.getEvent());
 
+                    System.out.println("Guardando ticket...");
                     OurTicketsDTO ticketResponse = ticketService.addTicket(ticket);
+                    System.out.println("Ticket guardado con ID: " + ticketResponse.getOurTickets().getId());
 
+                    // Agregar el ticket a la lista de tickets
+                    ticketList.add(ticketResponse.getOurTickets());
+
+                    // Guardar detalle de factura
                     InvoiceDetailDTO detailDTO = new InvoiceDetailDTO();
+                    detailDTO.setInvoice(ourInvoiceResult);
+                    detailDTO.setTicket(ticketResponse.getOurTickets());
 
-                    detailDTO.setInvoice(ourInvoiceResult); // Asociar el detalle a la factura creada
-                    detailDTO.setTicket(ticketResponse.getOurTickets()); // Asociar el detalle a la factura creada
-                    InvoiceDetailDTO detailResponse = invoiceDetailManagementService.addInvoiceDetail(detailDTO);
-                    if (detailResponse.getStatusCode() != 200) {
-                        throw new RuntimeException("Error saving invoice detail: " + detailResponse.getMessage());
-                    }
+                    // Agregar el detalle a la lista de detalles
+                    InvoiceDetailDTO savedDetail = invoiceDetailManagementService.addInvoiceDetail(detailDTO);
+                    detailList.add(savedDetail.getOurInvoiceDetail());
+
+                    System.out.println("Detalle de factura guardado para ticket ID: " + ticketResponse.getOurTickets().getId());
                 }
+                System.out.println("Hello1");
+                response.setIssueDate(invoiceRequestDTO.getIssueDate());
+                response.setTotal(invoiceRequestDTO.getTotal());
+                response.setPaymentMethod(invoiceRequestDTO.getPaymentMethod());
+                System.out.println("Hello4");
+                response.setMessage("Invoice saved successfully.");
+                System.out.println("Hello5");
+                response.setStatusCode(200);
+                System.out.println("Hello6");
             } else {
+                System.out.println("Error: La factura no se pudo guardar.");
                 response.setMessage("Invoice not saved due to an unknown error.");
                 response.setStatusCode(500);
             }
+            System.out.println("Hello7");
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred: " + e.getMessage());
         }
+        System.out.println("Hello8");
         return response;
     }
 
