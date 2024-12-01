@@ -86,7 +86,7 @@ class UserService{
     static async deleteArtist(token){
         try {
             const response = await axios.get(`${UserService.BASE_URL}/artists/delete/{artistId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`}
             });
             return response.data;
         } catch (err) {
@@ -107,8 +107,7 @@ class UserService{
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);            }
             throw err;
         }
     }
@@ -120,21 +119,19 @@ class UserService{
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);            }
             throw err;
         }
     }
     static async updateConcert(token){
         try {
             const response = await axios.get(`${UserService.BASE_URL}/events/update/{eventId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`}
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);            }
             throw err;
         }
     }
@@ -146,8 +143,7 @@ class UserService{
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);            }
             throw err;
         }
     }
@@ -162,8 +158,7 @@ class UserService{
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);            }
             throw err;
         }
     }
@@ -171,16 +166,16 @@ class UserService{
     static async createPlace(token){
         try {
             const response = await axios.get(`${UserService.BASE_URL}/places/add`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`}
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);    }       
             throw err;
-        }
+            }
     }
+
     static async updatePlace(token){
         try {
             const response = await axios.get(`${UserService.BASE_URL}/places/update/{eventId}`, {
@@ -189,15 +184,15 @@ class UserService{
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
-            }
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);            }
             throw err;
         }
     }
+
     static async deletePlace(token){
         try {
             const response = await axios.get(`${UserService.BASE_URL}/places/delete/{eventId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`}
             });
             return response.data;
         } catch (err) {
@@ -207,6 +202,8 @@ class UserService{
             throw err;
         }
     }
+    
+    
 
     static async getYourProfile(token){
         try{
@@ -244,9 +241,6 @@ class UserService{
         }
     }
 
- 
-
-
     static async updateUser(userId, userData, token){
         try{
             const response = await axios.put(`${UserService.BASE_URL}/admin/update/${userId}`, userData,
@@ -258,6 +252,7 @@ class UserService{
             throw err;
         }
     }
+
 
     /**AUTHENTICATION CHECKER */
     static logout(){
