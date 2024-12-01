@@ -17,8 +17,14 @@ public class OurPlacesDTO {
     private String message;
     private String name;
     private Integer capacityGeneral;
+    private Double priceGen;
+    private Double discountGen;
     private Integer capacityVip;
+    private Double priceVip;
+    private Double discountVip;
     private Integer capacityPalco;
+    private Double pricePalco;
+    private Double discountPalco;
     private String state;
     private String city;
     private String direction;

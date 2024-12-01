@@ -7,6 +7,7 @@ import com.chaweDev.conciertosYa.repository.PlaceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ PlaceManagementService {
             if (ourPlaceResult.getId() > 0) {
                 // Crear asientos según las capacidades indicadas
                 createSeatsForPlace(ourPlaceResult, place.getCapacityGeneral(),
-                        place.getCapacityVip(), place.getCapacityPalco());
+                        place.getCapacityVip(), place.getCapacityPalco(), place);
 
                 response.setOurPlaces(ourPlaceResult);
                 response.setMessage("Place Saved Successfully");
@@ -49,18 +50,18 @@ PlaceManagementService {
         return response;
     }
 
-    private void createSeatsForPlace(OurPlaces place, int generalCapacity, int vipCapacity, int palcoCapacity) {
+    private void createSeatsForPlace(OurPlaces place, int generalCapacity, int vipCapacity, int palcoCapacity, OurPlacesDTO placeData) {
         // Crear asientos generales
-        createSeatsByType(place, generalCapacity, "General", "GEN", 50.0);
+        createSeatsByType(place, generalCapacity, "General", "GEN", placeData.getPriceGen(), placeData.getDiscountGen());
 
         // Crear asientos VIP
-        createSeatsByType(place, vipCapacity, "VIP", "VIP", 100.0);
+        createSeatsByType(place, vipCapacity, "VIP", "VIP", placeData.getPriceVip(), placeData.getDiscountVip());
 
         // Crear asientos Palco
-        createSeatsByType(place, palcoCapacity, "Palco", "PALCO", 150.0);
+        createSeatsByType(place, palcoCapacity, "Palco", "PALCO", placeData.getPricePalco(), placeData.getDiscountPalco());
     }
 
-    private void createSeatsByType(OurPlaces place, int capacity, String type, String codePrefix, double price) {
+    private void createSeatsByType(OurPlaces place, int capacity, String type, String codePrefix, double price, double discount) {
         int rows = (int) Math.ceil(Math.sqrt(capacity)); // Calcular filas necesarias
         int columns = (int) Math.ceil((double) capacity / rows); // Calcular columnas necesarias
 
@@ -74,6 +75,7 @@ PlaceManagementService {
                 seatDTO.setRow(row); // Número de fila
                 seatDTO.setColumn(column); // Número de columna
                 seatDTO.setType(type); // Tipo de asiento (General, VIP, Palco)
+                seatDTO.setDiscount(discount);
                 seatDTO.setPrice(price); // Precio del asiento
                 seatDTO.setState("Available"); // Estado del asiento
                 seatDTO.setPlace(place.getId()); // Relacionar con el lugar

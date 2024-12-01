@@ -13,26 +13,6 @@ function ProfilePage() {
     fetchProfileInfo();
   }, []);
 
-<<<<<<< HEAD
-    const fetchProfileInfo = async () => {
-        try {
-            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-            const response = await UserService.getYourProfile(token);
-            setProfileInfo(response.ourUsers);
-        } catch (error) {
-            console.error('Error fetching profile information:', error);
-        }
-    };
-    return (
-        <div className="profile-page-container">
-            <Hero/>
-            <div className="flex justify-center items-center py-10">
-                <Searcher />
-            </div>
-            <Posters/>         
-        </div>
-    );
-=======
   const fetchProfileInfo = async () => {
     try {
       const token = localStorage.getItem("token"); // Retrieve the token from localStorage
@@ -51,7 +31,6 @@ function ProfilePage() {
       <Posters />
     </div>
   );
->>>>>>> 0b3f7c8a9bbde5347f636127e5b388dcfd4c9a71
 }
 
 export default ProfilePage;

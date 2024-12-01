@@ -5,7 +5,7 @@ class UserService{
 
     static async login(email, password){
         try{
-            const response = await axios.post(${UserService.BASE_URL}/auth/login, {email, password})
+            const response = await axios.post(`${UserService.BASE_URL}/auth/login`, {email, password})
             return response.data;
 
         }catch(err){
@@ -15,11 +15,7 @@ class UserService{
 
     static async register(userData) {
         try {
-<<<<<<< HEAD
             const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData);
-=======
-            const response = await axios.post(${UserService.BASE_URL}/auth/register, userData);
->>>>>>> 0b3f7c8a9bbde5347f636127e5b388dcfd4c9a71
             return response.data;
         } catch (err) {
             throw err;
@@ -30,13 +26,13 @@ class UserService{
     //CRUD methods artists
     static async getAllUsers(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/admin/get-all-users, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/admin/get-all-users`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
@@ -44,64 +40,58 @@ class UserService{
       //CRUD methods artists
     static async getAllartists(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/artists/get-all, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/artists/get-all`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async createArtist(token, artistData) {
         try {
-<<<<<<< HEAD
             const response = await axios.post(
                 `${UserService.BASE_URL}/artists/add`, 
                 artistData, // Asegúrate de enviar los datos del artista aquí
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
                     }
                 }
             );
-=======
-            const response = await axios.get(${UserService.BASE_URL}/artists/add, {
-                headers: { Authorization: Bearer ${token} }
-            });
->>>>>>> 0b3f7c8a9bbde5347f636127e5b388dcfd4c9a71
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async updateArtist(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/artists/update/{artistId}, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/artists/update/{artistId}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async deleteArtist(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/artists/delete/{artistId}, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/artists/delete/{artistId}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
@@ -111,52 +101,52 @@ class UserService{
     //CRUD methods Concerts
     static async getAllconcerts(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/events/get-all, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/events/get-all`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async createConcert(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/events/add, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/events/add`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async updateConcert(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/events/update/{eventId}, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/events/update/{eventId}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async deleteConcert(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/events/delete/{eventId}, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/events/delete/{eventId}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
@@ -166,13 +156,13 @@ class UserService{
     //CRUD methods Places
     static async getAllplaces(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/places/get-all, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/places/get-all`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
@@ -180,39 +170,39 @@ class UserService{
 
     static async createPlace(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/places/add, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/places/add`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async updatePlace(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/places/update/{eventId}, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/places/update/{eventId}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
     }
     static async deletePlace(token){
         try {
-            const response = await axios.get(${UserService.BASE_URL}/places/delete/{eventId}, {
-                headers: { Authorization: Bearer ${token} }
+            const response = await axios.get(`${UserService.BASE_URL}/places/delete/{eventId}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
         } catch (err) {
             if (err.response) {
-                console.error(Error: ${err.response.status} - ${err.response.data.message});
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
             }
             throw err;
         }
@@ -220,9 +210,9 @@ class UserService{
 
     static async getYourProfile(token){
         try{
-            const response = await axios.get(${UserService.BASE_URL}/adminuser/get-profile, 
+            const response = await axios.get(`${UserService.BASE_URL}/adminuser/get-profile`, 
             {
-                headers: {Authorization: Bearer ${token}}
+                headers: {Authorization: `Bearer ${token}`}
             })
             return response.data;
         }catch(err){
@@ -232,9 +222,9 @@ class UserService{
 
     static async getUserById(userId, token){
         try{
-            const response = await axios.get(${UserService.BASE_URL}/admin/get-users/${userId}, 
+            const response = await axios.get(`${UserService.BASE_URL}/admin/get-users/${userId}`, 
             {
-                headers: {Authorization: Bearer ${token}}
+                headers: {Authorization: `Bearer ${token}`}
             })
             return response.data;
         }catch(err){
@@ -244,9 +234,9 @@ class UserService{
 
     static async deleteUser(userId, token){
         try{
-            const response = await axios.delete(${UserService.BASE_URL}/admin/delete/${userId}, 
+            const response = await axios.delete(`${UserService.BASE_URL}/admin/delete/${userId}`, 
             {
-                headers: {Authorization: Bearer ${token}}
+                headers: {Authorization: `Bearer ${token}`}
             })
             return response.data;
         }catch(err){
@@ -259,9 +249,9 @@ class UserService{
 
     static async updateUser(userId, userData, token){
         try{
-            const response = await axios.put(${UserService.BASE_URL}/admin/update/${userId}, userData,
+            const response = await axios.put(`${UserService.BASE_URL}/admin/update/${userId}`, userData,
             {
-                headers: {Authorization: Bearer ${token}}
+                headers: {Authorization: `Bearer ${token}`}
             })
             return response.data;
         }catch(err){
