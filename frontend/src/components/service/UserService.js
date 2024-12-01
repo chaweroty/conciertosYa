@@ -15,7 +15,11 @@ class UserService{
 
     static async register(userData) {
         try {
+<<<<<<< HEAD
+            const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData);
+=======
             const response = await axios.post(${UserService.BASE_URL}/auth/register, userData);
+>>>>>>> 0b3f7c8a9bbde5347f636127e5b388dcfd4c9a71
             return response.data;
         } catch (err) {
             throw err;
@@ -51,11 +55,23 @@ class UserService{
             throw err;
         }
     }
-    static async createArtist(token){
+    static async createArtist(token, artistData) {
         try {
+<<<<<<< HEAD
+            const response = await axios.post(
+                `${UserService.BASE_URL}/artists/add`, 
+                artistData, // Asegúrate de enviar los datos del artista aquí
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+=======
             const response = await axios.get(${UserService.BASE_URL}/artists/add, {
                 headers: { Authorization: Bearer ${token} }
             });
+>>>>>>> 0b3f7c8a9bbde5347f636127e5b388dcfd4c9a71
             return response.data;
         } catch (err) {
             if (err.response) {

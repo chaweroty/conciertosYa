@@ -30,7 +30,7 @@ function App() {
                   {/* Rutas Protegidas para Usuarios Autenticados */}
                   <Route element={<PrivateRoute />}>
                       <Route path="/profile" element={<ProfilePage />} />
-                      <Route path="/concert-details/:artistId" element={<ConcertDetails />} />
+                      <Route path="/concert-details/:eventId" element={<ConcertDetails />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/invoice" element={<Invoice />} />
                   </Route>

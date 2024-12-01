@@ -49,6 +49,40 @@ const ArtistTable = () => {
     });
     setShowModal(true);
   };
+  const validateData = () => {
+    const { name, musicalGenre, instagram, facebook, contact } = modalData;
+    if (!name || !musicalGenre || !instagram || !facebook || !contact) {
+        setError("Todos los campos son obligatorios.");
+        return false;
+    }
+    return true;
+};
+
+const handleSave = async () => {
+  if (!validateData()) {
+    return;
+  }
+  try {
+    if (isEditing) {
+      await axios.put(`${API_URL}/update/${modalData.id}`, modalData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } else {
+      await axios.post(`${API_URL}/add`, modalData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+    setShowModal(false);
+    fetchArtists();
+  } catch (err) {
+    setError("Error al guardar el evento.");
+    console.error("Error saving event:", err);
+  }
+};
 
   const handleEdit = (artist) => {
     setIsEditing(true);
@@ -73,41 +107,6 @@ const ArtistTable = () => {
   const openDeleteModal = (artist) => {
     setSelectedArtist(artist);
     setIsDeleteModalOpen(true);
-  };
-
-  const validateData = () => {
-    const { name, musicalGenre, instagram, facebook, contact } = modalData;
-    if (!name || !musicalGenre || !instagram || !facebook || !contact) {
-      setError("Todos los campos son obligatorios.");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSave = async () => {
-    if (!validateData()) {
-      return;
-    }
-    try {
-      if (isEditing) {
-        await axios.put(`${API_URL}/update/${modalData.id}`, modalData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } else {
-        await axios.post(`${API_URL}/add`, modalData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      }
-      setShowModal(false);
-      fetchArtists();
-    } catch (err) {
-      setError("Error al guardar el artista.");
-      console.error("Error saving artist:", err);
-    }
   };
 
   const handleCancel = () => {
@@ -229,9 +228,9 @@ const ArtistTable = () => {
               <div className="mb-4">
                 <label className="block text-sm font-semibold">instagram</label>
                 <textarea
-                  value={modalData.bio}
+                  value={modalData.instagram}
                   onChange={(e) =>
-                    setModalData({ ...modalData, bio: e.target.value })
+                    setModalData({ ...modalData, instagram: e.target.value })
                   }
                   className="w-full p-2 border border-gray-300 rounded"
                 />

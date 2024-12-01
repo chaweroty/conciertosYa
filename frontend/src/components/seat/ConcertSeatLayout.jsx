@@ -81,19 +81,19 @@ const ConcertSeatLayout = () => {
       {/* Instructions and Information */}
       <div className="space-y-3 w-28">
         <div className="flex items-center gap-x-2">
-          <MdOutlineChair className="text-lg text-neutral-500 -rotate-90" />
+          <MdOutlineChair className="text-lg text-neutral-500 -rotate-300" />
           <p className="text-neutral-900 dark:text-neutral-200 text-sm font-normal">
             Disponibles
           </p>
         </div>
         <div className="flex items-center gap-x-2">
-          <MdOutlineChair className="text-lg text-red-500 -rotate-90" />
+          <MdOutlineChair className="text-lg text-red-500 -rotate-300" />
           <p className="text-neutral-900 dark:text-neutral-200 text-sm font-normal">
             Reservado
           </p>
         </div>
         <div className="flex items-center gap-x-2">
-          <MdOutlineChair className="text-lg text-violet-500 -rotate-90" />
+          <MdOutlineChair className="text-lg text-violet-500 -rotate-300" />
           <p className="text-neutral-900 dark:text-neutral-200 text-sm font-normal">
             Seleccionado
           </p>
