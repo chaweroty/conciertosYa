@@ -3,13 +3,14 @@ import { MdOutlineChair } from 'react-icons/md';
 
 const Seat = ({ seatNumber, isSelected, onClick, seatType }) => {
   const getSeatColor = () => {
+    console.log(seatType);
     if (isSelected) return 'text-violet-600'; // Morado para asientos seleccionados
     switch (seatType) {
-      case 'general':
+      case 'General':
         return 'text-gray-400'; // Gris para General
-      case 'vip':
+      case 'VIP':
         return 'text-black'; // Negro para VIP
-      case 'palco':
+      case 'Palco':
         return 'text-orange-400'; // Naranja para Palco
       default:
         return 'text-neutral-600';

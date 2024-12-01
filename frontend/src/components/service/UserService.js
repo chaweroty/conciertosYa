@@ -252,6 +252,7 @@ class UserService{
         }
     }
 
+
     /**AUTHENTICATION CHECKER */
     static logout(){
         localStorage.removeItem('token')
