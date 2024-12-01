@@ -18,8 +18,9 @@ public class InvoiceManagementController {
     private InvoiceManagementService invoiceManagementService;
 
     @PostMapping("/add")
-    public ResponseEntity<InvoiceDTO> addInvoice(@RequestBody InvoiceRequestDTO request) {
-        InvoiceDTO response = invoiceManagementService.addInvoice(request);
+    public ResponseEntity<InvoiceRequestDTO> addInvoice(@RequestBody InvoiceRequestDTO request) {
+        InvoiceRequestDTO response = invoiceManagementService.addInvoice(request);
+        System.out.println(ResponseEntity.status(response.getStatusCode()).body(response));
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

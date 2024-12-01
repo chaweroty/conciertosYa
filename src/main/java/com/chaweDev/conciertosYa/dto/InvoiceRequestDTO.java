@@ -1,9 +1,6 @@
 package com.chaweDev.conciertosYa.dto;
 
-import com.chaweDev.conciertosYa.entity.Invoice;
-import com.chaweDev.conciertosYa.entity.OurEvents;
-import com.chaweDev.conciertosYa.entity.OurSeats;
-import com.chaweDev.conciertosYa.entity.OurUsers;
+import com.chaweDev.conciertosYa.entity.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -22,7 +19,7 @@ public class InvoiceRequestDTO {
     private Double total;
     private String paymentMethod;
     private OurUsers client;
-    private List<OurSeats> ourSeatsList;
+    private List<Integer> ourSeatsList;
     private LocalDate buyingDate;
     private OurEvents event;
 }
