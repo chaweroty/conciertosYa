@@ -1,6 +1,7 @@
 package com.chaweDev.conciertosYa.dto;
 
 import com.chaweDev.conciertosYa.entity.Invoice;
+import com.chaweDev.conciertosYa.entity.OurEvents;
 import com.chaweDev.conciertosYa.entity.OurSeats;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,17 +14,15 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InvoiceDTO {
-
+public class InvoiceRequestDTO {
     private int statusCode;
     private String error;
     private String message;
-    private Integer id;
     private LocalDate issueDate;
     private Double total;
     private String paymentMethod;
     private OurUsers client;
-    private Invoice ourInvoice;
-    private List<Invoice> ourInvoicesList;
     private List<OurSeats> ourSeatsList;
+    private LocalDate buyingDate;
+    private OurEvents event;
 }

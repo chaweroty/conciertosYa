@@ -1,7 +1,11 @@
 package com.chaweDev.conciertosYa.service;
 
 import com.chaweDev.conciertosYa.dto.InvoiceDTO;
+import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
+import com.chaweDev.conciertosYa.dto.InvoiceRequestDTO;
+import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
 import com.chaweDev.conciertosYa.entity.Invoice;
+import com.chaweDev.conciertosYa.entity.OurSeats;
 import com.chaweDev.conciertosYa.repository.InvoiceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,22 +19,56 @@ public class InvoiceManagementService {
     @Autowired
     private InvoiceRepo invoiceRepo;
 
-    public InvoiceDTO addInvoice(InvoiceDTO invoice) {
+    @Autowired
+    private InvoiceDetailManagementService invoiceDetailManagementService;
+
+    @Autowired
+    private TicketManagementService ticketService;
+
+    @Autowired
+    private SeatManagementService seatService;
+
+    public InvoiceDTO addInvoice(InvoiceRequestDTO invoiceRequestDTO) {
         InvoiceDTO response = new InvoiceDTO();
         try {
-
+            // Crear y guardar la factura principal
             Invoice savedInvoice = new Invoice();
-
-            savedInvoice.setIssueDate(invoice.getIssueDate());
-            savedInvoice.setTotal(invoice.getTotal());
-            savedInvoice.setPaymentMethod(invoice.getPaymentMethod());
-            savedInvoice.setClient(invoice.getClient());
+            savedInvoice.setIssueDate(invoiceRequestDTO.getIssueDate());
+            savedInvoice.setTotal(invoiceRequestDTO.getTotal());
+            savedInvoice.setPaymentMethod(invoiceRequestDTO.getPaymentMethod());
+            savedInvoice.setClient(invoiceRequestDTO.getClient());
 
             Invoice ourInvoiceResult = invoiceRepo.save(savedInvoice);
+
             if (ourInvoiceResult.getId() > 0) {
                 response.setOurInvoice(ourInvoiceResult);
-                response.setMessage("Invoice Saved Successfully");
+                response.setMessage("Invoice saved successfully.");
                 response.setStatusCode(200);
+
+                // Llamar a los métodos de InvoiceDetailManagementService para guardar los detalles de la factura
+                for (OurSeats seat : invoiceRequestDTO.getOurSeatsList()) {
+                    Double price = seatService.getSeatById(seat.getId()).getPrice();
+                    Double discount = seatService.getSeatById(seat.getId()).getDiscount();
+                    OurTicketsDTO ticket = new OurTicketsDTO();
+                    ticket.setBuyingDate(invoiceRequestDTO.getBuyingDate());
+                    ticket.setDiscount(discount);
+                    ticket.setPrice(price);
+                    ticket.setPriceWithDiscount(price - price*(discount/100));
+                    ticket.setSeat(seat);
+                    ticket.setClient(invoiceRequestDTO.getClient());
+                    ticket.setEvent(invoiceRequestDTO.getEvent());
+
+                    OurTicketsDTO ticketResponse = ticketService.addTicket(ticket);
+
+                    InvoiceDetailDTO detailDTO = new InvoiceDetailDTO();
+
+                    detailDTO.setInvoice(ourInvoiceResult); // Asociar el detalle a la factura creada
+                    detailDTO.setTicket(ticketResponse.getOurTickets()); // Asociar el detalle a la factura creada
+                    InvoiceDetailDTO detailResponse = invoiceDetailManagementService.addInvoiceDetail(detailDTO);
+                    if (detailResponse.getStatusCode() != 200) {
+                        throw new RuntimeException("Error saving invoice detail: " + detailResponse.getMessage());
+                    }
+                }
             } else {
                 response.setMessage("Invoice not saved due to an unknown error.");
                 response.setStatusCode(500);

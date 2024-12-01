@@ -16,6 +16,7 @@ public class SeatManagementService {
 
     @Autowired
     private SeatRepo seatRepo;
+    @Autowired
     private PlaceRepo placeRepo;
 
     public OurSeatsDTO addSeat(OurSeatsDTO seat) {
