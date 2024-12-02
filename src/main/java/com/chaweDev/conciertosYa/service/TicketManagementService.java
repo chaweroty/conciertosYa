@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
 import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
 import com.chaweDev.conciertosYa.entity.OurEvents;
 import com.chaweDev.conciertosYa.entity.OurSeats;
@@ -19,12 +20,27 @@ public class TicketManagementService {
     @Autowired
     private TicketRepo ticketRepo;
 
+    @Autowired
+    private SeatManagementService seatService;
+
     public OurTicketsDTO addTicket(OurTicketsDTO ticket) {
         OurTicketsDTO response = new OurTicketsDTO();
         try {
             OurTickets savedPlace = new OurTickets();
 
             SaveTicket(savedPlace, ticket.getBuyingDate(), ticket.getDiscount(), ticket.getPrice(), ticket.getPriceWithDiscount(), ticket.getSeat(), ticket.getClient(), ticket.getEvent());
+
+            OurSeats seatResult = seatService.getSeatById(ticket.getSeat().getId()).getOurSeats();
+            OurSeatsDTO updatedSeat = new OurSeatsDTO();
+
+            updatedSeat.setCode(seatResult.getCode());
+            updatedSeat.setRow(seatResult.getRow());
+            updatedSeat.setColumn(seatResult.getColumn());
+            updatedSeat.setType(seatResult.getType());
+            updatedSeat.setState("Sold");
+            updatedSeat.setPlace(seatResult.getPlace().getId());
+            System.out.println(updatedSeat.getState());
+            seatService.updateSeat(seatResult.getId(), updatedSeat);
 
             OurTickets ourTicketResult = ticketRepo.save(savedPlace);
 

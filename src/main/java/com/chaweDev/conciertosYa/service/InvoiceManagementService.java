@@ -28,7 +28,6 @@ public class InvoiceManagementService {
     @Autowired
     private SeatManagementService seatService;
 
-    @Transactional
     public InvoiceRequestDTO addInvoice(InvoiceRequestDTO invoiceRequestDTO) {
         InvoiceRequestDTO response = new InvoiceRequestDTO();
         try {
