@@ -131,14 +131,16 @@ const ConcertDetails = () => {
               </div>
               <ConcertSeatLayout
                capacityGeneral={eventDetails.place.capacityGeneral}
-               priceGen={eventDetails.place.priceGener}
-               discountGen ={eventDetails.place.discountGen}
+               priceGen={eventDetails.place.id.priceGener}
+               discountGen ={eventDetails.place.id.discountGen}
 
                capacityVip={eventDetails.place.capacityVip}
-               capacityPalco={eventDetails.place.capacityPalco}
+               priceVip={eventDetails.place.id.priceVip}
+               discountVip={eventDetails.place.id.discountVip}
          
-               priceVip={eventDetails.place.priceVip}
-               pricePalco={eventDetails.place.pricePalco}
+               capacityPalco={eventDetails.place.capacityPalco}
+               pricePalco={eventDetails.place.id.pricePalco}
+               discountPalco={eventDetails.place.id.discountPalco}
 
                 />
            
