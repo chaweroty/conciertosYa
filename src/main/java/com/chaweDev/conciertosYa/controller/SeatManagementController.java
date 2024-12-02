@@ -30,6 +30,11 @@ public class SeatManagementController {
         return ResponseEntity.ok(seatManagementService.getSeatById(seatId));
     }
 
+    @GetMapping("/get-place-seats/{placeId}")
+    public ResponseEntity<OurSeatsDTO> getSeatPlaceById(@PathVariable Integer placeId) {
+        return ResponseEntity.ok(seatManagementService.getSeatPlaceById(placeId));
+    }
+
     @PutMapping("/update/{seatId}")
     public ResponseEntity<OurSeatsDTO> updateSeat(@PathVariable Integer seatId, @RequestBody OurSeatsDTO seat) {
         return ResponseEntity.ok(seatManagementService.updateSeat(seatId, seat));
