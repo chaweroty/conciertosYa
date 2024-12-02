@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 
 const API_URL = "http://localhost:8080/places";
 
@@ -174,7 +175,7 @@ const PlaceTable = () => {
                     {place.name}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {place.address}
+                    {place.direction}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {place.city}

@@ -1,29 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Seat from "./Seat";
-import { GiSteeringWheel } from "react-icons/gi";
+import { FaPersonRays } from "react-icons/fa6";
 import { MdOutlineChair } from "react-icons/md";
 import { RiMoneyRupeeCircleLine } from "react-icons/ri";
-import { FaPersonRays } from "react-icons/fa6";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-
-const ConcertSeatLayout = ({ capacityGeneral, capacityVip, capacityPalco }) => {
+const ConcertSeatLayout = ({ seats }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
-
-  // Crear asientos dinámicamente
-  const generateSeats = (capacity, section,price) => {
-    return Array.from({ length: capacity }, (_, index) => ({
-      id: `${section}-${index + 1}`,
-      section,
-      price,
-    }));
-  };
-
-  const seats = [
-    ...generateSeats(capacityGeneral, "General", 25),
-    ...generateSeats(capacityVip, "VIP", 50),
-    ...generateSeats(capacityPalco, "Palco", 100),
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
   const handleSeatClick = (seatId) => {
     if (selectedSeats.includes(seatId)) {
@@ -34,6 +20,16 @@ const ConcertSeatLayout = ({ capacityGeneral, capacityVip, capacityPalco }) => {
       alert("Solo puedes seleccionar un máximo de 10 asientos");
     }
   };
+
+  useEffect(() => {
+    if (seats && seats.length > 0) {
+      setIsLoading(false);
+    }
+  }, [seats]);
+
+  if (isLoading) {
+    return <p>Cargando asientos...</p>;
+  }
 
   return (
     <div className="space-y-5">
@@ -65,26 +61,25 @@ const ConcertSeatLayout = ({ capacityGeneral, capacityVip, capacityPalco }) => {
                 >
                   {seats
                     .slice(rowIndex * 10, rowIndex * 10 + 10)
-
                     .map((seat) => (
                       <Seat
                         key={seat.id}
                         seatNumber={seat.code}
                         isSelected={selectedSeats.includes(seat.id)}
                         onClick={() => handleSeatClick(seat.id)}
-                        seatType={seat.section}
+                        seatType={seat.type}
                       />
                     ))}
                 </div>
               ))}
             </>
           ) : (
-            <p>Cargando asientos...</p>
+            <p>No hay asientos disponibles</p>
           )}
         </div>
       </div>
 
-      {/* Instructions and Information */}
+      {/* Instrucciones e información */}
       <div className="space-y-3 w-28">
         <div className="flex items-center gap-x-2">
           <MdOutlineChair className="text-lg text-neutral-500 -rotate-300" />
@@ -107,7 +102,7 @@ const ConcertSeatLayout = ({ capacityGeneral, capacityVip, capacityPalco }) => {
         <div className="flex items-center gap-x-2">
           <RiMoneyRupeeCircleLine className="text-lg text-neutral-500" />
           <p className="text-neutral-900 dark:text-neutral-200 text-sm font-normal">
-            Disponible
+            Precio
           </p>
         </div>
       </div>
@@ -136,36 +131,32 @@ const ConcertSeatLayout = ({ capacityGeneral, capacityVip, capacityPalco }) => {
           <p className="text-lg font-medium">
             USD:{" "}
             {selectedSeats.reduce((total, seatId) => {
-              const seat = seats.find((seat) => seat.id === seatId); 
-              return total + seat.price; 
+              const seat = seats.find((seat) => seat.id === seatId);
+              return total + seat.price;
             }, 0)}
           </p>
         </div>
       )}
 
-<Link
-  to="/checkout"
-  state={{
-    selectedSeats,
-    total: selectedSeats.reduce((total, seatId) => {
-      const seat = seats.find((seat) => seat.id === seatId);
-      return total + seat.price;
-    }, 0),
-    discount: selectedSeats.reduce((totalDiscount, seatId) => {
-      const seat = seats.find((seat) => seat.id === seatId);
-      return totalDiscount + (seat.discount || 0);  // Descuento por asiento
-    }, 0),
-  }}
->
-  <div className="flex justify-center items-center py-10">
-    <button
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      type="button"
-    >
-      Comprar Boletos
-    </button>
-  </div>
-</Link>
+      <Link
+        to="/checkout"
+        state={{
+          selectedSeats,
+          total: selectedSeats.reduce((total, seatId) => {
+            const seat = seats.find((seat) => seat.id === seatId);
+            return total + seat.price;
+          }, 0),
+        }}
+      >
+        <div className="flex justify-center items-center py-10">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+          >
+            Comprar Boletos
+          </button>
+        </div>
+      </Link>
     </div>
   );
 };

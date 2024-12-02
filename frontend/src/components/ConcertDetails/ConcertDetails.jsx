@@ -5,12 +5,15 @@ import ConcertSeatLayout from '../seat/ConcertSeatLayout';
 import { MdOutlineChair } from 'react-icons/md';
 
 const API_URL = "http://localhost:8080/events";
+const SEATS_API_URL = "http://localhost:8080/seats/get-place-seats";
 
 const ConcertDetails = () => {
   const { eventId } = useParams();
   const [eventDetails, setEventDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [seats, setSeats] = useState([]);
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -35,6 +38,30 @@ const ConcertDetails = () => {
       fetchEventDetails();
     }
   }, [eventId, token]);
+
+  useEffect(() => {
+    const fetchSeats = async () => {
+      if (eventDetails?.place?.id) {
+        try {
+          const response = await axios.get(`${SEATS_API_URL}/${eventDetails.place.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log("API response:", response); // Verifica que la respuesta sea correcta
+          console.log("Seats data:", response.data.ourSeatsList); // Ver si los datos existen y son correctos
+          setSeats(response.data.ourSeatsList); // Asegúrate de que setSeats está actualizando el estado
+        } catch (err) {
+          console.error("Error fetching seats:", err);
+          setError("Error al obtener los asientos.");
+        }
+      }
+    };
+  
+    fetchSeats();
+  }, [eventDetails, token]);
+  
+
 
   if (loading) {
     return <p className="text-xl mt-10">Cargando detalles del concierto...</p>;
@@ -125,25 +152,13 @@ const ConcertDetails = () => {
                 <div className="flex items-center gap-x-2">
                 <MdOutlineChair className="text-lg text-orange-500 -rotate-300" />
                 <p className="text-lg">
-                  Palco: {eventDetails.place.capacityPalco} asientos
+                  Palco: {eventDetails.place.capacityPalco} asientos:{eventDetails.place.id.pricePalco}
+                  
                 </p>
+               
                 </div>
               </div>
-              <ConcertSeatLayout
-               capacityGeneral={eventDetails.place.capacityGeneral}
-               priceGen={eventDetails.place.id.priceGener}
-               discountGen ={eventDetails.place.id.discountGen}
-
-               capacityVip={eventDetails.place.capacityVip}
-               priceVip={eventDetails.place.id.priceVip}
-               discountVip={eventDetails.place.id.discountVip}
-         
-               capacityPalco={eventDetails.place.capacityPalco}
-               pricePalco={eventDetails.place.id.pricePalco}
-               discountPalco={eventDetails.place.id.discountPalco}
-
-                />
-           
+            <ConcertSeatLayout seats={seats} />
             </div>
           </div>
         </div>
