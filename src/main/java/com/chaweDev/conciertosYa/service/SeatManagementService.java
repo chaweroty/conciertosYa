@@ -8,7 +8,9 @@ import com.chaweDev.conciertosYa.repository.PlaceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -69,6 +71,31 @@ public class SeatManagementService {
             response.setStatusCode(200);
             response.setOurSeats(seat);
             response.setMessage("Seat found successfully");
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error occurred: " + e.getMessage());
+        }
+        return response;
+    }
+
+    public OurSeatsDTO getSeatPlaceById(Integer placeId) {
+        OurSeatsDTO response = new OurSeatsDTO();
+        try {
+            List<OurSeats> seats = seatRepo.findAll();
+            List<OurSeats> placeSeats = new ArrayList<>();
+            for (OurSeats seat : seats){
+                if (Objects.equals(seat.getPlace().getId(), placeId)){
+                    placeSeats.add(seat);
+                }
+            }
+            if (seats.isEmpty()) {
+                response.setStatusCode(404);
+                response.setMessage("No seats found");
+            } else {
+                response.setStatusCode(200);
+                response.setOurSeatsList(placeSeats);
+                response.setMessage("Seats found successfully");
+            }
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred: " + e.getMessage());
