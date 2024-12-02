@@ -1,30 +1,36 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Checkout = () => {
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const [cardDetails, setCardDetails] = useState({
-    cardHolder: "",
-    postalCode: "",
-    cardNumber: "",
-    expDate: "",
-    cvv: "",
-  });
+  const { state } = useLocation();
+  const { selectedSeats, total, discount } = state || {};  // Obtén los valores desde el estado
 
+  const seatDiscount = selectedSeats && selectedSeats[0] ? selectedSeats[0].discount : 0;
+  const seatType = selectedSeats && selectedSeats[0] ? selectedSeats[0].type : "";
+  const seatCode = selectedSeats && selectedSeats[0] ? selectedSeats[0].code : "";
+
+  const subtotal = total - discount;
+  const tax = seatDiscount || 4.00;
+  const finalTotal = subtotal + tax;
+
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [showMessage, setShowMessage] = useState(false);  // Estado para controlar el mensaje
+  const [messageContent, setMessageContent] = useState("");  // Estado para el contenido del mensaje
   const navigate = useNavigate();
 
   const handleChangePaymentMethod = (method) => {
     setPaymentMethod(method);
   };
 
-  const handleCardDetailChange = (e) => {
-    const { name, value } = e.target;
-    setCardDetails({ ...cardDetails, [name]: value });
-  };
-
   const handleSubmit = () => {
-    // Aquí podrías agregar validaciones o lógica adicional antes de redirigir
-    navigate("/invoice"); // Redirige a la vista del Invoice
+    // Mostrar el mensaje flotante
+    setMessageContent(`Gracias por tu pago realizado con el método ${paymentMethod}.`);
+    setShowMessage(true);
+
+    // Redirigir después de 3 segundos (ajustar el tiempo según sea necesario)
+    setTimeout(() => {
+      navigate("/invoice");
+    }, 3000);  // Tiempo en milisegundos antes de redirigir
   };
 
   return (
@@ -67,59 +73,6 @@ const Checkout = () => {
             </div>
 
             <form className="mt-8">
-              <div className="grid sm:col-span-2 sm:grid-cols-2 gap-4">
-                <div>
-                  <input
-                    type="text"
-                    name="cardHolder"
-                    value={cardDetails.cardHolder}
-                    onChange={handleCardDetailChange}
-                    placeholder="Name of card holder"
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="postalCode"
-                    value={cardDetails.postalCode}
-                    onChange={handleCardDetailChange}
-                    placeholder="Postal code"
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="cardNumber"
-                    value={cardDetails.cardNumber}
-                    onChange={handleCardDetailChange}
-                    placeholder="Card number"
-                    className="col-span-full px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="expDate"
-                    value={cardDetails.expDate}
-                    onChange={handleCardDetailChange}
-                    placeholder="EXP."
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="cvv"
-                    value={cardDetails.cvv}
-                    onChange={handleCardDetailChange}
-                    placeholder="CVV"
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-              </div>
-
               <div className="flex flex-wrap gap-4 mt-8">
                 <button
                   type="button"
@@ -142,20 +95,32 @@ const Checkout = () => {
             <h3 className="text-lg font-bold text-gray-800">Summary</h3>
             <ul className="text-gray-800 mt-6 space-y-3">
               <li className="flex flex-wrap gap-4 text-sm">
-                Sub total <span className="ml-auto font-bold">$48.00</span>
+                Sub total <span className="ml-auto font-bold">${subtotal.toFixed(2)}</span>
               </li>
               <li className="flex flex-wrap gap-4 text-sm">
-                Discount (20%) <span className="ml-auto font-bold">$4.00</span>
+                Discount (20%) <span className="ml-auto font-bold">-${discount.toFixed(2)}</span>
               </li>
-              <li className="flex flex-wrap gap-4 text-sm">Tax <span className="ml-auto font-bold">$4.00</span></li>
+              <li className="flex flex-wrap gap-4 text-sm">Tax <span className="ml-auto font-bold">${tax.toFixed(2)}</span></li>
               <hr />
               <li className="flex flex-wrap gap-4 text-base font-bold">
-                Total <span className="ml-auto">$52.00</span>
+                Total <span className="ml-auto">${finalTotal.toFixed(2)}</span>
               </li>
             </ul>
+            {/* Aquí puedes agregar información adicional si lo deseas */}
+            <div className="mt-4 text-sm text-gray-600">
+              <p>Seat Type: {seatType}</p>
+              <p>Seat Code: {seatCode}</p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Mensaje flotante */}
+      {showMessage && (
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-md shadow-lg">
+          {messageContent}
+        </div>
+      )}
     </div>
   );
 };

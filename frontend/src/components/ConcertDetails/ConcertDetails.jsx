@@ -93,6 +93,19 @@ const ConcertDetails = () => {
                 <p className="text-lg">{eventDetails.status}</p>
               </div>
 
+              <div className="mb-6">
+                <p className="text-xl font-bold mb-2">Precios:</p>
+                <p className="text-lg">
+                  General: 25 usd 
+                </p>
+                <p className="text-lg">
+                  VIP: 50 usd
+                </p>
+                <p className="text-lg">
+                  Palco: 100 usd
+                </p>
+              </div>
+
               {/* Capacidades */}
               <div className="mb-6">
                 <p className="text-xl font-bold mb-2">Capacidades:</p>
@@ -118,20 +131,17 @@ const ConcertDetails = () => {
               </div>
               <ConcertSeatLayout
                capacityGeneral={eventDetails.place.capacityGeneral}
+               priceGen={eventDetails.place.priceGener}
+               discountGen ={eventDetails.place.discountGen}
+
                capacityVip={eventDetails.place.capacityVip}
                capacityPalco={eventDetails.place.capacityPalco}
+         
+               priceVip={eventDetails.place.priceVip}
+               pricePalco={eventDetails.place.pricePalco}
+
                 />
-              {/* Botón de compra */}
-              <Link to="/checkout">
-              <div className="flex justify-center items-center py-10">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="button"
-                >
-                  Comprar Boletos
-                </button>
-                </div>
-              </Link>
+           
             </div>
           </div>
         </div>
