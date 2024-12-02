@@ -3,19 +3,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const Checkout = () => {
   const { state } = useLocation();
-  const { selectedSeats, total, discount } = state || {};  // Obtén los valores desde el estado
+  const { selectedSeats = [], total = 0, discount = 0 } = state || {};
 
-  const seatDiscount = selectedSeats && selectedSeats[0] ? selectedSeats[0].discount : 0;
-  const seatType = selectedSeats && selectedSeats[0] ? selectedSeats[0].type : "";
-  const seatCode = selectedSeats && selectedSeats[0] ? selectedSeats[0].code : "";
-
-  const subtotal = total - discount;
-  const tax = seatDiscount || 4.00;
-  const finalTotal = subtotal + tax;
+  const subtotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);  const tax = selectedSeats.reduce((totalTax, seat) => totalTax + (seat.tax || 0), 0);
+  const totalDiscount =  selectedSeats.reduce((totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)), 0);
+  const finalTotal = subtotal - totalDiscount;
 
   const [paymentMethod, setPaymentMethod] = useState("card");
-  const [showMessage, setShowMessage] = useState(false);  // Estado para controlar el mensaje
-  const [messageContent, setMessageContent] = useState("");  // Estado para el contenido del mensaje
+  const [showMessage, setShowMessage] = useState(false);
+  const [messageContent, setMessageContent] = useState("");
   const navigate = useNavigate();
 
   const handleChangePaymentMethod = (method) => {
@@ -23,14 +19,12 @@ const Checkout = () => {
   };
 
   const handleSubmit = () => {
-    // Mostrar el mensaje flotante
     setMessageContent(`Gracias por tu pago realizado con el método ${paymentMethod}.`);
     setShowMessage(true);
 
-    // Redirigir después de 3 segundos (ajustar el tiempo según sea necesario)
     setTimeout(() => {
       navigate("/invoice");
-    }, 3000);  // Tiempo en milisegundos antes de redirigir
+    }, 3000);
   };
 
   return (
@@ -98,7 +92,7 @@ const Checkout = () => {
                 Sub total <span className="ml-auto font-bold">${subtotal.toFixed(2)}</span>
               </li>
               <li className="flex flex-wrap gap-4 text-sm">
-                Discount (20%) <span className="ml-auto font-bold">-${discount.toFixed(2)}</span>
+                Discount <span className="ml-auto font-bold">-${discount.toFixed(2)}</span>
               </li>
               <li className="flex flex-wrap gap-4 text-sm">Tax <span className="ml-auto font-bold">${tax.toFixed(2)}</span></li>
               <hr />
@@ -106,16 +100,23 @@ const Checkout = () => {
                 Total <span className="ml-auto">${finalTotal.toFixed(2)}</span>
               </li>
             </ul>
-            {/* Aquí puedes agregar información adicional si lo deseas */}
+
             <div className="mt-4 text-sm text-gray-600">
-              <p>Seat Type: {seatType}</p>
-              <p>Seat Code: {seatCode}</p>
+              <h4 className="font-bold">Selected Seats:</h4>
+              <ul>
+                {selectedSeats.map((seat, index) => (
+                  <li key={index}>
+                    {seat.type} - {seat.code} (${seat.price}) - Discount: {seat.discount}%
+                    {subtotal} 
+                    {totalDiscount}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mensaje flotante */}
       {showMessage && (
         <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-md shadow-lg">
           {messageContent}

@@ -9,14 +9,16 @@ import axios from "axios";
 const ConcertSeatLayout = ({ seats }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const token = localStorage.getItem("token");
 
-  const handleSeatClick = (seatId) => {
-    if (selectedSeats.includes(seatId)) {
-      setSelectedSeats(selectedSeats.filter((seat) => seat !== seatId));
+  const handleSeatClick = (seat) => {
+    if (selectedSeats.some((selectedSeat) => selectedSeat.id === seat.id)) {
+      // Si el asiento ya está seleccionado, deseleccionarlo
+      setSelectedSeats(selectedSeats.filter((selectedSeat) => selectedSeat.id !== seat.id));
     } else if (selectedSeats.length < 10) {
-      setSelectedSeats([...selectedSeats, seatId]);
+      // Si hay menos de 10 asientos seleccionados, añadirlo
+      setSelectedSeats([...selectedSeats, seat]);
     } else {
+      // Si ya hay 10 asientos seleccionados, mostrar una alerta
       alert("Solo puedes seleccionar un máximo de 10 asientos");
     }
   };
@@ -30,7 +32,6 @@ const ConcertSeatLayout = ({ seats }) => {
   if (isLoading) {
     return <p>Cargando asientos...</p>;
   }
-
   return (
     <div className="space-y-5">
       <h2 className="text-xl text-neutral-800 dark:text-neutral-100 font-medium">
@@ -65,8 +66,8 @@ const ConcertSeatLayout = ({ seats }) => {
                       <Seat
                         key={seat.id}
                         seatNumber={seat.code}
-                        isSelected={selectedSeats.includes(seat.id)}
-                        onClick={() => handleSeatClick(seat.id)}
+                        isSelected={selectedSeats.some((s) => s.id === seat.id)}
+                        onClick={() => handleSeatClick(seat)}
                         seatType={seat.type}
                       />
                     ))}
@@ -107,56 +108,55 @@ const ConcertSeatLayout = ({ seats }) => {
         </div>
       </div>
 
-      {/* Selected seats */}
+      {/* Asientos seleccionados */}
       {selectedSeats.length > 0 && (
         <div className="!mt-10">
           <h3 className="text-lg font-bold">Asientos Seleccionados:</h3>
           <div className="flex flex-wrap">
             {selectedSeats.map((seat) => (
               <div
-                key={seat}
+                key={seat.id}
                 className="w-10 h-10 rounded-md m-1.5 text-lg font-medium bg-violet-600/30 flex items-center justify-center"
               >
-                {seat}
+                {seat.code}
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Calculate price */}
+      {/* Calcular precio */}
       {selectedSeats.length > 0 && (
         <div className="!mt-5 flex items-center gap-x-4">
           <h3 className="text-lg font-bold">Total a pagar:</h3>
           <p className="text-lg font-medium">
             USD:{" "}
-            {selectedSeats.reduce((total, seatId) => {
-              const seat = seats.find((seat) => seat.id === seatId);
+            {selectedSeats.reduce((total, seat) => {
               return total + seat.price;
             }, 0)}
           </p>
         </div>
       )}
 
-      <Link
-        to="/checkout"
-        state={{
-          selectedSeats,
-          total: selectedSeats.reduce((total, seatId) => {
-            const seat = seats.find((seat) => seat.id === seatId);
-            return total + seat.price;
-          }, 0),
-        }}
-      >
-        <div className="flex justify-center items-center py-10">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-          >
-            Comprar Boletos
-          </button>
-        </div>
-      </Link>
+<Link
+  to="/checkout"
+  state={{
+    selectedSeats,
+    total: selectedSeats.reduce((total, seat) => total + (seat.price - (seat.price * (seat.discount / 100))), 0),  // Aplicando el descuento como porcentaje
+    discount: selectedSeats.reduce((totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)), 0)  // Calculando el total de los descuentos
+   
+  }}
+> 
+  <div className="flex justify-center items-center py-10">
+    <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      type="button"
+    >
+      Comprar Boletos
+    </button>
+  </div>
+</Link>
+
     </div>
   );
 };
