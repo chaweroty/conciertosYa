@@ -5,6 +5,7 @@ import ConcertSeatLayout from '../seat/ConcertSeatLayout';
 import { MdOutlineChair } from 'react-icons/md';
 
 const API_URL = "http://localhost:8080/events";
+const API_URL2 = "http://localhost:8080/users";
 const SEATS_API_URL = "http://localhost:8080/seats/get-place-seats";
 
 const ConcertDetails = () => {
