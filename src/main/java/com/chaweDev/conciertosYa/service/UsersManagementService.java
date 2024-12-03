@@ -68,6 +68,7 @@ public class UsersManagementService {
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             response.setStatusCode(200);
             response.setToken(jwt);
+            response.setId(user.getId());
             response.setRole(user.getRole());
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
