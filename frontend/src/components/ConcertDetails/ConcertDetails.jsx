@@ -5,7 +5,7 @@ import ConcertSeatLayout from '../seat/ConcertSeatLayout';
 import { MdOutlineChair } from 'react-icons/md';
 
 const API_URL = "http://localhost:8080/events";
-const API_URL2 = "http://localhost:8080/users";
+const API_URL2 = "http://localhost:8080/user";
 const SEATS_API_URL = "http://localhost:8080/seats/get-place-seats";
 
 const ConcertDetails = () => {
@@ -16,6 +16,8 @@ const ConcertDetails = () => {
   const [seats, setSeats] = useState([]);
 
   const token = localStorage.getItem("token");
+ 
+
 
   useEffect(() => {
     const fetchEventDetails = async () => {

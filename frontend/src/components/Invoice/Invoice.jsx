@@ -1,13 +1,50 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
-const API_URL = "http://localhost:8080/invoices";
+import { useParams, Link, useLocation } from "react-router-dom";
 
+const API_URL = "http://localhost:8080/invoices_details";
 
 const Invoice = () => {
+  const location = useLocation();
+  const { invoice } = location.state || {}; 
+  const [invoiceData, setInvoiceData] = useState(null);
+  console.log("Datos de la factura recibidos:", invoice);
 
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (invoice) {
+      FetchInvoiceDetailsForId();
+    }
+  }, [invoice]);
+
+  const FetchInvoiceDetailsForId = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/get-invoice-tickets/${invoice.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setInvoiceData(response.data); // Set the fetched data to state
+    } catch (err) {
+      console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
+    }
+  };
   
-  const invoiceData = {
+  console.log("Estos son los datos detallados de la factura",invoiceData);
+
+  // Return a message if no invoice is found
+  if (!invoice) {
+    return <div>Factura no disponible</div>;
+  }
+
+  // Check if invoice data is fetched before rendering the details
+  if (!invoiceData) {
+    return <div>Cargando detalles de la factura...</div>;
+  }
+
+  // Static invoice data (if invoice data is not fetched yet)
+  const invoiceDat = {
     company: "ConciertosYa",
     date: "01/05/2023",
     invoiceNumber: "INV12345",
@@ -31,7 +68,7 @@ const Invoice = () => {
     <div className="bg-white border rounded-lg shadow-lg px-6 py-8 max-w-md mx-auto mt-8">
       {/* Header */}
       <h1 className="font-bold text-2xl my-4 text-center text-blue-600">
-        {invoiceData.company}
+        {invoiceDat.company}
       </h1>
       <hr className="mb-2" />
 
@@ -39,18 +76,18 @@ const Invoice = () => {
       <div className="flex justify-between mb-6">
         <h1 className="text-lg font-bold">Invoice</h1>
         <div className="text-gray-700 text-right">
-          <div>Date: {invoiceData.date}</div>
-          <div>Invoice #: {invoiceData.invoiceNumber}</div>
+          <div>Date: {invoiceDat.date}</div>
+          <div>Invoice #: {invoiceDat.invoiceNumber}</div>
         </div>
       </div>
 
       {/* Customer Info */}
       <div className="mb-8">
         <h2 className="text-lg font-bold mb-4">Bill To:</h2>
-        <div className="text-gray-700 mb-2">{invoiceData.customer.name}</div>
-        <div className="text-gray-700 mb-2">{invoiceData.customer.address}</div>
-        <div className="text-gray-700 mb-2">{invoiceData.customer.city}</div>
-        <div className="text-gray-700">{invoiceData.customer.email}</div>
+        <div className="text-gray-700 mb-2">{invoiceDat.customer.name}</div>
+        <div className="text-gray-700 mb-2">{invoiceDat.customer.address}</div>
+        <div className="text-gray-700 mb-2">{invoiceDat.customer.city}</div>
+        <div className="text-gray-700">{invoiceDat.customer.email}</div>
       </div>
 
       {/* Items Table */}
@@ -62,7 +99,7 @@ const Invoice = () => {
           </tr>
         </thead>
         <tbody>
-          {invoiceData.items.map((item, index) => (
+          {invoiceDat.items.map((item, index) => (
             <tr key={index}>
               <td className="text-left text-gray-700">{item.description}</td>
               <td className="text-right text-gray-700">${item.amount.toFixed(2)}</td>
@@ -73,15 +110,15 @@ const Invoice = () => {
           <tr>
             <td className="text-left font-bold text-gray-700">Total</td>
             <td className="text-right font-bold text-gray-700">
-              ${invoiceData.total.toFixed(2)}
+              ${invoiceDat.total.toFixed(2)}
             </td>
           </tr>
         </tfoot>
       </table>
 
       {/* Footer Notes */}
-      <div className="text-gray-700 mb-2">{invoiceData.note}</div>
-      <div className="text-gray-700 text-sm">{invoiceData.paymentTerms}</div>
+      <div className="text-gray-700 mb-2">{invoiceDat.note}</div>
+      <div className="text-gray-700 text-sm">{invoiceDat.paymentTerms}</div>
     </div>
   );
 };

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-
-const API_URL = "http://localhost:8080/invoice/add";
+import UserService from "../service/UserService";
+const API_URL = "http://localhost:8080/invoices/add";
 
 const Checkout = () => {
   const { state } = useLocation();
+  const id = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
   const { event, selectedSeats = [], total = 0, discount = 0 } = state || {};
 
   const subtotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);
@@ -23,29 +25,31 @@ const Checkout = () => {
 
   const handleChangePaymentMethod = (method) => {
     setPaymentMethod(method);
+    console.log(token);
   };
 
   const handleSubmit = async () => {
     setMessageContent(`Gracias por tu pago realizado con el método ${paymentMethod}.`);
     setShowMessage(true);
 
-    try {
-      
-      const invoiceData = {
-        issueDate: new Date().toISOString().split('T')[0],  // Fecha de emisión
-        total: finalTotal,
-        paymentMethod: paymentMethod,
-        client: { id: 3 }, 
-        ourSeatsList: selectedSeats.map(seat => seat.id), 
-        buyingDate: new Date().toISOString().split('T')[0],  // Fecha de compra
-        event: {
-          id: event.id, 
-        },
-      };
+    const invoiceData = {
+      issueDate: new Date().toISOString().split("T")[0],
+      total: finalTotal,
+      paymentMethod: paymentMethod,
+      client: { id: id },
+      ourSeatsList: selectedSeats.map((seat) => seat.id),
+      buyingDate: new Date().toISOString().split("T")[0],
+      event: {
+        id: event.id,
+      },
+    };
 
-      await axios.post(API_URL, invoiceData);
+    try {
+       const invoice=await UserService.createInvoice(invoiceData, token);
       setTimeout(() => {
-        navigate("/invoice");
+        // When navigating to the Invoice page
+      navigate('/invoice', { state: { invoice: invoice } });
+
       }, 3000);
     } catch (error) {
       console.error("Error al crear la factura:", error);
@@ -53,6 +57,7 @@ const Checkout = () => {
       setShowMessage(true);
     }
   };
+
 
   return (
     <div className="font-[sans-serif] lg:flex lg:items-center lg:justify-center lg:h-screen max-lg:py-4">
