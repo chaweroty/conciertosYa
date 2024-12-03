@@ -15,6 +15,7 @@ public class InvoiceRequestDTO {
     private int statusCode;
     private String error;
     private String message;
+    private Integer id;
     private LocalDate issueDate;
     private Double total;
     private String paymentMethod;

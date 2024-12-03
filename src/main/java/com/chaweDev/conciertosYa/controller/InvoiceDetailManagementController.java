@@ -26,6 +26,12 @@ public class InvoiceDetailManagementController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping("/get-invoice-tickets/{invoiceId}")
+    public ResponseEntity<InvoiceDetailDTO> getInvoiceTicketsByInvoiceId(@PathVariable Integer invoiceId) {
+        return ResponseEntity.ok(invoiceDetailManagementService.getInvoiceTicketsByInvoiceId(invoiceId));
+    }
+
+
     @GetMapping("/get/{invoiceDetailId}")
     public ResponseEntity<InvoiceDetailDTO> getInvoiceDetailById(@PathVariable Integer invoiceDetailId) {
         return ResponseEntity.ok(invoiceDetailManagementService.getInvoiceDetailById(invoiceDetailId));

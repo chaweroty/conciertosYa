@@ -98,6 +98,7 @@ public class InvoiceManagementService {
                     System.out.println("Detalle de factura guardado para ticket ID: " + ticketResponse.getOurTickets().getId());
                 }
                 System.out.println("Hello1");
+                response.setId(ourInvoiceResult.getId());
                 response.setIssueDate(invoiceRequestDTO.getIssueDate());
                 response.setTotal(invoiceRequestDTO.getTotal());
                 response.setPaymentMethod(invoiceRequestDTO.getPaymentMethod());
@@ -130,6 +131,31 @@ public class InvoiceManagementService {
             } else {
                 response.setStatusCode(200);
                 response.setOurInvoicesList(invoices);
+                response.setMessage("Invoices found successfully");
+            }
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error occurred: " + e.getMessage());
+        }
+        return response;
+    }
+
+    public InvoiceDTO getInvoicesByUserId(Integer userId) {
+        InvoiceDTO response = new InvoiceDTO();
+        try {
+            List<Invoice> invoices = invoiceRepo.findAll();
+            List<Invoice> userInvoices = new ArrayList<>();
+            for (Invoice invoice : invoices) {
+                if (invoice.getClient().getId().equals(userId)) {
+                    userInvoices.add(invoice);
+                }
+            }
+            if (invoices.isEmpty()) {
+                response.setStatusCode(404);
+                response.setMessage("No invoices found");
+            } else {
+                response.setStatusCode(200);
+                response.setOurInvoicesList(userInvoices);
                 response.setMessage("Invoices found successfully");
             }
         } catch (Exception e) {

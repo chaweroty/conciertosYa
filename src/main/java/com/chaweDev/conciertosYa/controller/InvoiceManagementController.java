@@ -35,6 +35,11 @@ public class InvoiceManagementController {
         return ResponseEntity.ok(invoiceManagementService.getInvoiceById(invoiceId));
     }
 
+    @GetMapping("/get-user-invoices/{userId}")
+    public ResponseEntity<InvoiceDTO> getInvoicesByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(invoiceManagementService.getInvoicesByUserId(userId));
+    }
+
     @PutMapping("/update/{invoiceId}")
     public ResponseEntity<InvoiceDTO> updateInvoice(@PathVariable Integer invoiceId, @RequestBody Invoice invoice) {
         return ResponseEntity.ok(invoiceManagementService.updateInvoice(invoiceId, invoice));

@@ -8,6 +8,7 @@ import com.chaweDev.conciertosYa.repository.InvoiceDetailRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,31 @@ public class InvoiceDetailManagementService {
             } else {
                 response.setStatusCode(200);
                 response.setOurInvoicesDetailList(invoiceDetails);
+                response.setMessage("Invoice details found successfully");
+            }
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error occurred: " + e.getMessage());
+        }
+        return response;
+    }
+
+    public InvoiceDetailDTO getInvoiceTicketsByInvoiceId(Integer invoiceId) {
+        InvoiceDetailDTO response = new InvoiceDetailDTO();
+        try {
+            List<InvoiceDetail> invoiceDetails = invoiceDetailRepo.findAll();
+            List<InvoiceDetail> invoiceTickets = new ArrayList<>();
+            for (InvoiceDetail invoiceDetail : invoiceDetails){
+                if(invoiceDetail.getInvoice().getId().equals(invoiceId)){
+                    invoiceTickets.add(invoiceDetail);
+                }
+            }
+            if (invoiceDetails.isEmpty()) {
+                response.setStatusCode(404);
+                response.setMessage("No invoice details found");
+            } else {
+                response.setStatusCode(200);
+                response.setOurInvoicesDetailList(invoiceTickets);
                 response.setMessage("Invoice details found successfully");
             }
         } catch (Exception e) {
