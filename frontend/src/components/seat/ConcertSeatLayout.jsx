@@ -6,7 +6,7 @@ import { RiMoneyRupeeCircleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const ConcertSeatLayout = ({ seats }) => {
+const ConcertSeatLayout = ({ seats, eventDetails  }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -142,9 +142,21 @@ const ConcertSeatLayout = ({ seats }) => {
   to="/checkout"
   state={{
     selectedSeats,
-    total: selectedSeats.reduce((total, seat) => total + (seat.price - (seat.price * (seat.discount / 100))), 0),  // Aplicando el descuento como porcentaje
-    discount: selectedSeats.reduce((totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)), 0)  // Calculando el total de los descuentos
-   
+    total: selectedSeats.reduce(
+      (total, seat) => total + (seat.price - (seat.price * (seat.discount / 100))),
+      0
+    ), 
+    discount: selectedSeats.reduce(
+      (totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)),
+      0
+    ), 
+    event: {
+      id: eventDetails.id, 
+      name: eventDetails.name,
+      date: eventDetails.date,
+      hour: eventDetails.hour,
+      place: eventDetails.place.name,
+    },
   }}
 > 
   <div className="flex justify-center items-center py-10">

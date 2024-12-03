@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/invoice/add";
 
 const Checkout = () => {
   const { state } = useLocation();
-  const { selectedSeats = [], total = 0, discount = 0 } = state || {};
+  const { event, selectedSeats = [], total = 0, discount = 0 } = state || {};
 
-  const subtotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);  const tax = selectedSeats.reduce((totalTax, seat) => totalTax + (seat.tax || 0), 0);
-  const totalDiscount =  selectedSeats.reduce((totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)), 0);
+  const subtotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);
+  const tax = selectedSeats.reduce((totalTax, seat) => totalTax + (seat.tax || 0), 0);
+  const totalDiscount = selectedSeats.reduce(
+    (totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)),
+    0
+  );
   const finalTotal = subtotal - totalDiscount;
 
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("CREDIT_CARD");
   const [showMessage, setShowMessage] = useState(false);
   const [messageContent, setMessageContent] = useState("");
   const navigate = useNavigate();
@@ -18,13 +25,33 @@ const Checkout = () => {
     setPaymentMethod(method);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setMessageContent(`Gracias por tu pago realizado con el método ${paymentMethod}.`);
     setShowMessage(true);
 
-    setTimeout(() => {
-      navigate("/invoice");
-    }, 3000);
+    try {
+      
+      const invoiceData = {
+        issueDate: new Date().toISOString().split('T')[0],  // Fecha de emisión
+        total: finalTotal,
+        paymentMethod: paymentMethod,
+        client: { id: 3 }, 
+        ourSeatsList: selectedSeats.map(seat => seat.id), 
+        buyingDate: new Date().toISOString().split('T')[0],  // Fecha de compra
+        event: {
+          id: event.id, 
+        },
+      };
+
+      await axios.post(API_URL, invoiceData);
+      setTimeout(() => {
+        navigate("/invoice");
+      }, 3000);
+    } catch (error) {
+      console.error("Error al crear la factura:", error);
+      setMessageContent("Hubo un error al procesar el pago. Intenta de nuevo.");
+      setShowMessage(true);
+    }
   };
 
   return (
@@ -107,8 +134,6 @@ const Checkout = () => {
                 {selectedSeats.map((seat, index) => (
                   <li key={index}>
                     {seat.type} - {seat.code} (${seat.price}) - Discount: {seat.discount}%
-                    {subtotal} 
-                    {totalDiscount}
                   </li>
                 ))}
               </ul>

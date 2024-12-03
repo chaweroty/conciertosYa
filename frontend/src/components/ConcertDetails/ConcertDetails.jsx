@@ -158,7 +158,8 @@ const ConcertDetails = () => {
                
                 </div>
               </div>
-            <ConcertSeatLayout seats={seats} />
+              <ConcertSeatLayout seats={seats} eventDetails={eventDetails} />
+
             </div>
           </div>
         </div>
