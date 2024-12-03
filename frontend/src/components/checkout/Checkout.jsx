@@ -1,30 +1,57 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/invoice/add";
 
 const Checkout = () => {
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const [cardDetails, setCardDetails] = useState({
-    cardHolder: "",
-    postalCode: "",
-    cardNumber: "",
-    expDate: "",
-    cvv: "",
-  });
+  const { state } = useLocation();
+  const { event, selectedSeats = [], total = 0, discount = 0 } = state || {};
 
+  const subtotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);
+  const tax = selectedSeats.reduce((totalTax, seat) => totalTax + (seat.tax || 0), 0);
+  const totalDiscount = selectedSeats.reduce(
+    (totalDiscount, seat) => totalDiscount + (seat.price * (seat.discount / 100)),
+    0
+  );
+  const finalTotal = subtotal - totalDiscount;
+
+  const [paymentMethod, setPaymentMethod] = useState("CREDIT_CARD");
+  const [showMessage, setShowMessage] = useState(false);
+  const [messageContent, setMessageContent] = useState("");
   const navigate = useNavigate();
 
   const handleChangePaymentMethod = (method) => {
     setPaymentMethod(method);
   };
 
-  const handleCardDetailChange = (e) => {
-    const { name, value } = e.target;
-    setCardDetails({ ...cardDetails, [name]: value });
-  };
+  const handleSubmit = async () => {
+    setMessageContent(`Gracias por tu pago realizado con el método ${paymentMethod}.`);
+    setShowMessage(true);
 
-  const handleSubmit = () => {
-    // Aquí podrías agregar validaciones o lógica adicional antes de redirigir
-    navigate("/invoice"); // Redirige a la vista del Invoice
+    try {
+      
+      const invoiceData = {
+        issueDate: new Date().toISOString().split('T')[0],  // Fecha de emisión
+        total: finalTotal,
+        paymentMethod: paymentMethod,
+        client: { id: 3 }, 
+        ourSeatsList: selectedSeats.map(seat => seat.id), 
+        buyingDate: new Date().toISOString().split('T')[0],  // Fecha de compra
+        event: {
+          id: event.id, 
+        },
+      };
+
+      await axios.post(API_URL, invoiceData);
+      setTimeout(() => {
+        navigate("/invoice");
+      }, 3000);
+    } catch (error) {
+      console.error("Error al crear la factura:", error);
+      setMessageContent("Hubo un error al procesar el pago. Intenta de nuevo.");
+      setShowMessage(true);
+    }
   };
 
   return (
@@ -67,59 +94,6 @@ const Checkout = () => {
             </div>
 
             <form className="mt-8">
-              <div className="grid sm:col-span-2 sm:grid-cols-2 gap-4">
-                <div>
-                  <input
-                    type="text"
-                    name="cardHolder"
-                    value={cardDetails.cardHolder}
-                    onChange={handleCardDetailChange}
-                    placeholder="Name of card holder"
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="postalCode"
-                    value={cardDetails.postalCode}
-                    onChange={handleCardDetailChange}
-                    placeholder="Postal code"
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="cardNumber"
-                    value={cardDetails.cardNumber}
-                    onChange={handleCardDetailChange}
-                    placeholder="Card number"
-                    className="col-span-full px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="expDate"
-                    value={cardDetails.expDate}
-                    onChange={handleCardDetailChange}
-                    placeholder="EXP."
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    name="cvv"
-                    value={cardDetails.cvv}
-                    onChange={handleCardDetailChange}
-                    placeholder="CVV"
-                    className="px-4 py-3.5 bg-white text-gray-800 w-full text-sm border rounded-md focus:border-[#007bff] outline-none"
-                  />
-                </div>
-              </div>
-
               <div className="flex flex-wrap gap-4 mt-8">
                 <button
                   type="button"
@@ -142,20 +116,37 @@ const Checkout = () => {
             <h3 className="text-lg font-bold text-gray-800">Summary</h3>
             <ul className="text-gray-800 mt-6 space-y-3">
               <li className="flex flex-wrap gap-4 text-sm">
-                Sub total <span className="ml-auto font-bold">$48.00</span>
+                Sub total <span className="ml-auto font-bold">${subtotal.toFixed(2)}</span>
               </li>
               <li className="flex flex-wrap gap-4 text-sm">
-                Discount (20%) <span className="ml-auto font-bold">$4.00</span>
+                Discount <span className="ml-auto font-bold">-${discount.toFixed(2)}</span>
               </li>
-              <li className="flex flex-wrap gap-4 text-sm">Tax <span className="ml-auto font-bold">$4.00</span></li>
+              <li className="flex flex-wrap gap-4 text-sm">Tax <span className="ml-auto font-bold">${tax.toFixed(2)}</span></li>
               <hr />
               <li className="flex flex-wrap gap-4 text-base font-bold">
-                Total <span className="ml-auto">$52.00</span>
+                Total <span className="ml-auto">${finalTotal.toFixed(2)}</span>
               </li>
             </ul>
+
+            <div className="mt-4 text-sm text-gray-600">
+              <h4 className="font-bold">Selected Seats:</h4>
+              <ul>
+                {selectedSeats.map((seat, index) => (
+                  <li key={index}>
+                    {seat.type} - {seat.code} (${seat.price}) - Discount: {seat.discount}%
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
+
+      {showMessage && (
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-md shadow-lg">
+          {messageContent}
+        </div>
+      )}
     </div>
   );
 };

@@ -5,12 +5,16 @@ import ConcertSeatLayout from '../seat/ConcertSeatLayout';
 import { MdOutlineChair } from 'react-icons/md';
 
 const API_URL = "http://localhost:8080/events";
+const API_URL2 = "http://localhost:8080/users";
+const SEATS_API_URL = "http://localhost:8080/seats/get-place-seats";
 
 const ConcertDetails = () => {
   const { eventId } = useParams();
   const [eventDetails, setEventDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [seats, setSeats] = useState([]);
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -35,6 +39,30 @@ const ConcertDetails = () => {
       fetchEventDetails();
     }
   }, [eventId, token]);
+
+  useEffect(() => {
+    const fetchSeats = async () => {
+      if (eventDetails?.place?.id) {
+        try {
+          const response = await axios.get(`${SEATS_API_URL}/${eventDetails.place.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log("API response:", response); // Verifica que la respuesta sea correcta
+          console.log("Seats data:", response.data.ourSeatsList); // Ver si los datos existen y son correctos
+          setSeats(response.data.ourSeatsList); // Asegúrate de que setSeats está actualizando el estado
+        } catch (err) {
+          console.error("Error fetching seats:", err);
+          setError("Error al obtener los asientos.");
+        }
+      }
+    };
+  
+    fetchSeats();
+  }, [eventDetails, token]);
+  
+
 
   if (loading) {
     return <p className="text-xl mt-10">Cargando detalles del concierto...</p>;
@@ -93,6 +121,19 @@ const ConcertDetails = () => {
                 <p className="text-lg">{eventDetails.status}</p>
               </div>
 
+              <div className="mb-6">
+                <p className="text-xl font-bold mb-2">Precios:</p>
+                <p className="text-lg">
+                  General: 25 usd 
+                </p>
+                <p className="text-lg">
+                  VIP: 50 usd
+                </p>
+                <p className="text-lg">
+                  Palco: 100 usd
+                </p>
+              </div>
+
               {/* Capacidades */}
               <div className="mb-6">
                 <p className="text-xl font-bold mb-2">Capacidades:</p>
@@ -112,26 +153,14 @@ const ConcertDetails = () => {
                 <div className="flex items-center gap-x-2">
                 <MdOutlineChair className="text-lg text-orange-500 -rotate-300" />
                 <p className="text-lg">
-                  Palco: {eventDetails.place.capacityPalco} asientos
+                  Palco: {eventDetails.place.capacityPalco} asientos:{eventDetails.place.id.pricePalco}
+                  
                 </p>
+               
                 </div>
               </div>
-              <ConcertSeatLayout
-               capacityGeneral={eventDetails.place.capacityGeneral}
-               capacityVip={eventDetails.place.capacityVip}
-               capacityPalco={eventDetails.place.capacityPalco}
-                />
-              {/* Botón de compra */}
-              <Link to="/checkout">
-              <div className="flex justify-center items-center py-10">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="button"
-                >
-                  Comprar Boletos
-                </button>
-                </div>
-              </Link>
+              <ConcertSeatLayout seats={seats} eventDetails={eventDetails} />
+
             </div>
           </div>
         </div>
