@@ -41,97 +41,118 @@ public class EventManagementService {
     En caso contrario, se devuelve un mensaje indicando un error en el proceso de guardado.
     */
     public OurEventsDTO addEvent(DTO dto) {
-        OurEventsDTO response = new OurEventsDTO();
         try {
             if (dto instanceof OurEventsDTO event) {
                 OurEvents savedEvent = new OurEvents();
 
-                saveEvent(savedEvent, event.getName(), event.getDate(), event.getHour(), event.getDescription(), event.getMusicalGenre(), event.getStatus(), event.getImage(), event.getPlace(), event.getArtist());
+                saveEvent(savedEvent, event.getName(), event.getDate(), event.getHour(), event.getDescription(),
+                        event.getMusicalGenre(), event.getStatus(), event.getImage(), event.getPlace(), event.getArtist());
 
                 OurEvents ourEventResult = eventRepo.save(savedEvent);
 
                 if (ourEventResult.getId() > 0) {
-                    response.setOurEvents(ourEventResult);
-                    response.setMessage("Event Saved Successfully");
-                    response.setStatusCode(200);
+                    return new OurEventsDTO.Builder()
+                            .ourEvents(ourEventResult)
+                            .message("Event Saved Successfully")
+                            .statusCode(200)
+                            .build();
                 } else {
-                    response.setMessage("Event not saved due to an unknown error.");
-                    response.setStatusCode(500);
+                    return new OurEventsDTO.Builder()
+                            .message("Event not saved due to an unknown error.")
+                            .statusCode(500)
+                            .build();
                 }
             } else {
-                response.setMessage("Invalid DTO type");
-                response.setStatusCode(400);
+                return new OurEventsDTO.Builder()
+                        .message("Invalid DTO type")
+                        .statusCode(400)
+                        .build();
             }
-
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            return new OurEventsDTO.Builder()
+                    .statusCode(500)
+                    .message("Error occurred: " + e.getMessage())
+                    .build();
         }
-        return response;
     }
 
     public OurEventsDTO getAllEvents() {
-        OurEventsDTO response = new OurEventsDTO();
         try {
             List<OurEvents> events = eventRepo.findAll();
             if (events.isEmpty()) {
-                response.setStatusCode(404);
-                response.setMessage("No events found");
+                return new OurEventsDTO.Builder()
+                        .statusCode(404)
+                        .message("No events found")
+                        .build();
             } else {
-                response.setStatusCode(200);
-                response.setOurEventsList(events);
-                response.setMessage("Events found successfully");
+                return new OurEventsDTO.Builder()
+                        .statusCode(200)
+                        .ourEventsList(events)
+                        .message("Events found successfully")
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            return new OurEventsDTO.Builder()
+                    .statusCode(500)
+                    .message("Error occurred: " + e.getMessage())
+                    .build();
         }
-        return response;
     }
 
     public OurEventsDTO getEventById(Integer eventId) {
-        OurEventsDTO response = new OurEventsDTO();
         try {
-            OurEvents event = eventRepo.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
-            response.setStatusCode(200);
-            response.setOurEvents(event);
-            response.setMessage("Event found successfully");
+            OurEvents event = eventRepo.findById(eventId)
+                    .orElseThrow(() -> new RuntimeException("Event not found"));
+
+            return new OurEventsDTO.Builder()
+                    .statusCode(200)
+                    .ourEvents(event)
+                    .message("Event found successfully")
+                    .build();
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            return new OurEventsDTO.Builder()
+                    .statusCode(500)
+                    .message("Error occurred: " + e.getMessage())
+                    .build();
         }
-        return response;
     }
 
     public OurEventsDTO updateEvent(Integer eventId, OurEvents event) {
-        OurEventsDTO response = new OurEventsDTO();
         try {
             Optional<OurEvents> existingEventOpt = eventRepo.findById(eventId);
             if (existingEventOpt.isPresent()) {
                 OurEvents existingEvent = updateExistingEvent(event, existingEventOpt);
 
                 OurEvents updatedEvent = eventRepo.save(existingEvent);
-                response.setStatusCode(200);
-                response.setOurEvents(updatedEvent);
-                response.setMessage("Event updated successfully");
+                return new OurEventsDTO.Builder()
+                        .statusCode(200)
+                        .ourEvents(updatedEvent)
+                        .message("Event updated successfully")
+                        .build();
             } else {
-                response.setStatusCode(404);
-                response.setMessage("Event not found");
+                return new OurEventsDTO.Builder()
+                        .statusCode(404)
+                        .message("Event not found")
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            return new OurEventsDTO.Builder()
+                    .statusCode(500)
+                    .message("Error occurred: " + e.getMessage())
+                    .build();
         }
-        return response;
     }
 
     private static OurEvents updateExistingEvent(OurEvents event, Optional<OurEvents> existingEventOpt) {
         OurEvents existingEvent = existingEventOpt.get();
-        saveEvent(existingEvent, event.getName(), event.getDate(), event.getHour(), event.getDescription(), event.getMusicalGenre(), event.getStatus(), event.getImage(), event.getPlace(), event.getArtist());
+        saveEvent(existingEvent, event.getName(), event.getDate(), event.getHour(), event.getDescription(),
+                event.getMusicalGenre(), event.getStatus(), event.getImage(), event.getPlace(), event.getArtist());
         return existingEvent;
     }
 
-    private static void saveEvent(OurEvents existingEvent, String name, LocalDate date, LocalTime hour, String description, String musicalGenre, String status, String image, OurPlaces place, OurArtists artist) {
+    private static void saveEvent(OurEvents existingEvent, String name, LocalDate date, LocalTime hour,
+                                  String description, String musicalGenre, String status, String image,
+                                  OurPlaces place, OurArtists artist) {
         existingEvent.setName(name);
         existingEvent.setDate(date);
         existingEvent.setHour(hour);
@@ -144,21 +165,25 @@ public class EventManagementService {
     }
 
     public OurEventsDTO deleteEvent(Integer eventId) {
-        OurEventsDTO response = new OurEventsDTO();
         try {
             Optional<OurEvents> eventOptional = eventRepo.findById(eventId);
             if (eventOptional.isPresent()) {
                 eventRepo.deleteById(eventId);
-                response.setStatusCode(200);
-                response.setMessage("Event deleted successfully");
+                return new OurEventsDTO.Builder()
+                        .statusCode(200)
+                        .message("Event deleted successfully")
+                        .build();
             } else {
-                response.setStatusCode(404);
-                response.setMessage("Event not found");
+                return new OurEventsDTO.Builder()
+                        .statusCode(404)
+                        .message("Event not found")
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred while deleting event: " + e.getMessage());
+            return new OurEventsDTO.Builder()
+                    .statusCode(500)
+                    .message("Error occurred while deleting event: " + e.getMessage())
+                    .build();
         }
-        return response;
     }
 }

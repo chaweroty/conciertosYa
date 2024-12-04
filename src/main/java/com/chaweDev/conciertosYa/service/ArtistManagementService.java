@@ -31,10 +31,11 @@ public class ArtistManagementService {
     y es posible gracias al polimorfismo.
     * */
     public OurArtistsDTO addArtist(DTO dto) {
-        OurArtistsDTO response = new OurArtistsDTO();
+        OurArtistsDTO response;
         try {
             if (dto instanceof OurArtistsDTO artist) {
 
+                // Crear la entidad OurArtists utilizando su constructor o Builder
                 OurArtists savedArtist = new OurArtists();
                 savedArtist.setName(artist.getName());
                 savedArtist.setMusicalGenre(artist.getMusicalGenre());
@@ -42,61 +43,84 @@ public class ArtistManagementService {
                 savedArtist.setFacebook(artist.getFacebook());
                 savedArtist.setContact(artist.getContact());
 
+                // Guardar la entidad
                 OurArtists ourArtistResult = artistRepo.save(savedArtist);
+
+                // Construir el DTO de respuesta
                 if (ourArtistResult.getId() > 0) {
-                    response.setOurArtists(ourArtistResult);
-                    response.setMessage("Artist Saved Successfully");
-                    response.setStatusCode(200);
+                    response = new OurArtistsDTO.Builder()
+                            .ourArtists(ourArtistResult)
+                            .message("Artist Saved Successfully")
+                            .statusCode(200)
+                            .build();
                 } else {
-                    response.setMessage("Artist not saved due to an unknown error.");
-                    response.setStatusCode(500);
+                    response = new OurArtistsDTO.Builder()
+                            .message("Artist not saved due to an unknown error.")
+                            .statusCode(500)
+                            .build();
                 }
+
             } else {
-                response.setMessage("Invalid DTO type");
-                response.setStatusCode(400);
+                response = new OurArtistsDTO.Builder()
+                        .message("Invalid DTO type")
+                        .statusCode(400)
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            response = new OurArtistsDTO.Builder()
+                    .message("Error occurred: " + e.getMessage())
+                    .statusCode(500)
+                    .build();
+
         }
         return response;
     }
 
     public OurArtistsDTO getAllArtists() {
-        OurArtistsDTO response = new OurArtistsDTO();
+        OurArtistsDTO response;
         try {
             List<OurArtists> artists = artistRepo.findAll();
             if (artists.isEmpty()) {
-                response.setStatusCode(404);
-                response.setMessage("No artists found");
+                response = new OurArtistsDTO.Builder()
+                        .message("No artists found")
+                        .statusCode(404)
+                        .build();
             } else {
-                response.setStatusCode(200);
-                response.setOurArtistsList(artists);
-                response.setMessage("Artists found successfully");
+                response = new OurArtistsDTO.Builder()
+                        .ourArtistsList(artists)
+                        .message("Artists found successfully")
+                        .statusCode(200)
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            response = new OurArtistsDTO.Builder()
+                    .message("Error occurred: " + e.getMessage())
+                    .statusCode(500)
+                    .build();
         }
         return response;
     }
 
     public OurArtistsDTO getArtistById(Integer artistId) {
-        OurArtistsDTO response = new OurArtistsDTO();
+        OurArtistsDTO response;
         try {
             OurArtists artist = artistRepo.findById(artistId).orElseThrow(() -> new RuntimeException("Artist not found"));
-            response.setStatusCode(200);
-            response.setOurArtists(artist);
-            response.setMessage("Artist found successfully");
+            response = new OurArtistsDTO.Builder()
+                    .ourArtists(artist)
+                    .message("Artist found successfully")
+                    .statusCode(200)
+                    .build();
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            response = new OurArtistsDTO.Builder()
+                    .message("Error occurred: " + e.getMessage())
+                    .statusCode(500)
+                    .build();
         }
         return response;
     }
 
     public OurArtistsDTO updateArtist(Integer artistId, OurArtists artist) {
-        OurArtistsDTO response = new OurArtistsDTO();
+        OurArtistsDTO response;
         try {
             Optional<OurArtists> existingArtistOpt = artistRepo.findById(artistId);
             if (existingArtistOpt.isPresent()) {
@@ -110,35 +134,47 @@ public class ArtistManagementService {
 
                 OurArtists updatedArtist = artistRepo.save(existingArtist);
 
-                response.setStatusCode(200);
-                response.setOurArtists(updatedArtist);
-                response.setMessage("Artist updated successfully");
+                response = new OurArtistsDTO.Builder()
+                        .ourArtists(updatedArtist)
+                        .message("Artist updated successfully")
+                        .statusCode(200)
+                        .build();
             } else {
-                response.setStatusCode(404);
-                response.setMessage("Artist not found");
+                response = new OurArtistsDTO.Builder()
+                        .message("No artists found")
+                        .statusCode(404)
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            response = new OurArtistsDTO.Builder()
+                    .message("Error occurred: " + e.getMessage())
+                    .statusCode(500)
+                    .build();
         }
         return response;
     }
 
     public OurArtistsDTO deleteArtist(Integer artistId) {
-        OurArtistsDTO response = new OurArtistsDTO();
+        OurArtistsDTO response;
         try {
             Optional<OurArtists> artistOptional = artistRepo.findById(artistId);
             if (artistOptional.isPresent()) {
                 artistRepo.deleteById(artistId);
-                response.setStatusCode(200);
-                response.setMessage("Artist deleted successfully");
+                response = new OurArtistsDTO.Builder()
+                        .message("Artist deleted successfully")
+                        .statusCode(200)
+                        .build();
             } else {
-                response.setStatusCode(404);
-                response.setMessage("Artist not found");
+                response = new OurArtistsDTO.Builder()
+                        .message("No artists found")
+                        .statusCode(404)
+                        .build();
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error occurred while deleting artist: " + e.getMessage());
+            response = new OurArtistsDTO.Builder()
+                    .message("Error occurred while deleting artist: " + e.getMessage())
+                    .statusCode(500)
+                    .build();
         }
         return response;
     }
