@@ -1,10 +1,11 @@
-package com.chaweDev.conciertosYa.controller.Visual;
+package com.chaweDev.conciertosYa.service.visual;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurPlacesDTO;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
 
 public interface IPlaceManagementService {
-    OurPlacesDTO addPlace(OurPlacesDTO place);
+    OurPlacesDTO addPlace(DTO place);
 
     OurPlacesDTO getAllPlaces();
 

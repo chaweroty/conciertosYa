@@ -1,7 +1,7 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.visual.ISeatManagementService;
 import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
-import com.chaweDev.conciertosYa.service.SeatManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class SeatManagementController {
     // Principio aplicado: Inversión de Dependencias (DIP)
     // Utilizamos una interfaz (ISeatManagementService) para la lógica de negocio, permitiendo flexibilidad y fácil intercambio de implementaciones.
     @Autowired
-    private SeatManagementService seatManagementService;
+    private ISeatManagementService seatManagementService;
 
     // Metodo para añadir un nuevo asiento.
     // Principio aplicado: Separación de Responsabilidades (SRP)
@@ -46,7 +46,7 @@ public class SeatManagementController {
 
     @GetMapping("/get-place-seats/{placeId}")
     public ResponseEntity<OurSeatsDTO> getSeatPlaceById(@PathVariable Integer placeId) {
-        return ResponseEntity.ok(seatManagementService.getSeatPlaceById(placeId));
+        return ResponseEntity.ok(seatManagementService.getSeatById(placeId));
     }
 
     // Metodo para actualizar un asiento específico.

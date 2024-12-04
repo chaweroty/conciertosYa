@@ -6,6 +6,7 @@ import com.chaweDev.conciertosYa.entity.Invoice;
 import com.chaweDev.conciertosYa.entity.InvoiceDetail;
 import com.chaweDev.conciertosYa.entity.OurTickets;
 import com.chaweDev.conciertosYa.repository.InvoiceDetailRepo;
+import com.chaweDev.conciertosYa.service.visual.IInvoiceDetailManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class InvoiceDetailManagementService {
+public class InvoiceDetailManagementService implements IInvoiceDetailManagementService {
 
     @Autowired
     private InvoiceDetailRepo invoiceDetailRepo;

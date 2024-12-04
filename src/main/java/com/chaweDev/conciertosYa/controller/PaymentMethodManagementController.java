@@ -1,8 +1,8 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.visual.IPaymentMethodManagementService;
 import com.chaweDev.conciertosYa.dto.PaymentMethodDTO;
 import com.chaweDev.conciertosYa.entity.PaymentMethod;
-import com.chaweDev.conciertosYa.service.PaymentMethodManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class PaymentMethodManagementController {
     // en lugar de una implementación concreta. Esto facilita el cambio de implementación en el futuro y
     // mejora la testabilidad de este controlador.
     @Autowired
-    private PaymentMethodManagementService paymentMethodManagementService;
+    private IPaymentMethodManagementService paymentMethodManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // cada metodo solo maneja una solicitud HTTP y delega toda la lógica de negocio al servicio.

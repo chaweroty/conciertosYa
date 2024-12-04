@@ -7,6 +7,7 @@ import com.chaweDev.conciertosYa.entity.OurUsers;
 import com.chaweDev.conciertosYa.entity.PaymentMethod;
 import com.chaweDev.conciertosYa.repository.PaymentMethodRepo;
 import com.chaweDev.conciertosYa.repository.UsersRepo;
+import com.chaweDev.conciertosYa.service.visual.IPaymentMethodManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PaymentMethodManagementService {
+public class PaymentMethodManagementService implements IPaymentMethodManagementService {
 
     @Autowired
     private PaymentMethodRepo paymentMethodRepo;

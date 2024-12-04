@@ -1,8 +1,8 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.visual.IPlaceManagementService;
 import com.chaweDev.conciertosYa.dto.OurPlacesDTO;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
-import com.chaweDev.conciertosYa.service.PlaceManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class PlaceManagementController {
     // La inyección de dependencias utiliza la interfaz IPlaceManagementService, lo que permite
     // cambiar o extender la implementación sin afectar el controlador.
     @Autowired
-    private PlaceManagementService placeManagementService;
+    private IPlaceManagementService placeManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // Este metodo se encarga exclusivamente de delegar la lógica para agregar un nuevo lugar.

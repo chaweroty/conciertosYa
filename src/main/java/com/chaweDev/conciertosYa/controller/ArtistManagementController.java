@@ -1,8 +1,8 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.visual.IArtistManagementService;
 import com.chaweDev.conciertosYa.dto.OurArtistsDTO;
 import com.chaweDev.conciertosYa.entity.OurArtists;
-import com.chaweDev.conciertosYa.service.ArtistManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class ArtistManagementController {
     // Se inyecta una interfaz (IArtistManagementService) para evitar acoplamiento directo
     // con implementaciones concretas, promoviendo flexibilidad y mejorando la testabilidad.
     @Autowired
-    private ArtistManagementService artistManagementService;
+    private IArtistManagementService artistManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // Este metodo maneja exclusivamente la creación de artistas, delegando toda la lógica

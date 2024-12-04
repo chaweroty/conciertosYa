@@ -2,6 +2,7 @@ package com.chaweDev.conciertosYa.controller;
 import com.chaweDev.conciertosYa.dto.ReqRes;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 import com.chaweDev.conciertosYa.service.UsersManagementService;
+import com.chaweDev.conciertosYa.service.visual.IUsersManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserManagementController {
     @Autowired
-    private UsersManagementService usersManagementService;
+    private IUsersManagementService usersManagementService;
 
 
     @PostMapping("/auth/register")

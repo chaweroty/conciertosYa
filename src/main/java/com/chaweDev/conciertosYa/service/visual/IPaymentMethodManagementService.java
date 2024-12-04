@@ -1,10 +1,11 @@
-package com.chaweDev.conciertosYa.controller.Visual;
+package com.chaweDev.conciertosYa.service.visual;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.PaymentMethodDTO;
 import com.chaweDev.conciertosYa.entity.PaymentMethod;
 
 public interface IPaymentMethodManagementService {
-    PaymentMethodDTO addPaymentMethod(PaymentMethodDTO paymentMethod);
+    PaymentMethodDTO addPaymentMethod(DTO paymentMethod);
 
     PaymentMethodDTO getAllPaymentMethods();
 

@@ -5,9 +5,9 @@ import com.chaweDev.conciertosYa.dto.ReqRes;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 
 public interface IUsersManagementService {
-    ReqRes register(DTO reg);
+    ReqRes register(DTO dto);
 
-    ReqRes login(DTO req);
+    ReqRes login(DTO dto);
 
     ReqRes refreshToken(ReqRes req);
 

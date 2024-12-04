@@ -1,8 +1,8 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.visual.ITicketManagementService;
 import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
 import com.chaweDev.conciertosYa.entity.OurTickets;
-import com.chaweDev.conciertosYa.service.TicketManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class TicketManagementController {
     // en lugar de una implementación concreta. Esto facilita el cambio de implementación en el futuro y
     // mejora la testabilidad de este controlador.
     @Autowired
-    private TicketManagementService ticketManagementService;
+    private ITicketManagementService ticketManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // Cada metodo solo maneja una solicitud HTTP y delega toda la lógica de negocio al servicio.

@@ -6,6 +6,7 @@ import com.chaweDev.conciertosYa.entity.OurArtists;
 import com.chaweDev.conciertosYa.entity.OurEvents;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
 import com.chaweDev.conciertosYa.repository.EventRepo;
+import com.chaweDev.conciertosYa.service.visual.IEventManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EventManagementService {
+public class EventManagementService implements IEventManagementService {
 
     @Autowired
     private EventRepo eventRepo;

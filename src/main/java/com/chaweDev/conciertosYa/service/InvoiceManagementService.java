@@ -5,6 +5,7 @@ import com.chaweDev.conciertosYa.entity.Invoice;
 import com.chaweDev.conciertosYa.entity.OurTickets;
 import com.chaweDev.conciertosYa.entity.InvoiceDetail;
 import com.chaweDev.conciertosYa.repository.InvoiceRepo;
+import com.chaweDev.conciertosYa.service.visual.IInvoiceManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import java.util.Optional;
 // como guardarlos, obtenerlos, actualizarlos y eliminarlos, y tiene acceso
 // al repositorio donde se encuentran los datos de las facturas.
 @Service
-public class InvoiceManagementService {
+public class InvoiceManagementService implements IInvoiceManagementService {
 
     @Autowired
     private InvoiceRepo invoiceRepo;

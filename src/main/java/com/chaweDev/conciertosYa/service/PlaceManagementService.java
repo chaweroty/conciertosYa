@@ -5,6 +5,7 @@ import com.chaweDev.conciertosYa.dto.OurPlacesDTO;
 import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
 import com.chaweDev.conciertosYa.repository.PlaceRepo;
+import com.chaweDev.conciertosYa.service.visual.IPlaceManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 // al repositorio donde se encuentran los datos de los lugares.
 @Service
 public class
-PlaceManagementService {
+PlaceManagementService implements IPlaceManagementService {
 
     @Autowired
     private PlaceRepo placeRepo;

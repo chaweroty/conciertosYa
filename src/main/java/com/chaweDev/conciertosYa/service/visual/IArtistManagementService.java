@@ -1,10 +1,11 @@
-package com.chaweDev.conciertosYa.controller.Visual;
+package com.chaweDev.conciertosYa.service.visual;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurArtistsDTO;
 import com.chaweDev.conciertosYa.entity.OurArtists;
 
 public interface IArtistManagementService {
-    OurArtistsDTO addArtist(OurArtistsDTO artist);
+    OurArtistsDTO addArtist(DTO artist);
 
     OurArtistsDTO getAllArtists();
 

@@ -1,9 +1,10 @@
-package com.chaweDev.conciertosYa.controller.Visual;
+package com.chaweDev.conciertosYa.service.visual;
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
 import com.chaweDev.conciertosYa.entity.OurTickets;
 
 public interface ITicketManagementService {
-    OurTicketsDTO addTicket(OurTicketsDTO ticket);
+    OurTicketsDTO addTicket(DTO ticket);
 
     OurTicketsDTO getAllTickets();
 
