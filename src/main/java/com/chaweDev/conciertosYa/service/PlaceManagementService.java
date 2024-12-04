@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurPlacesDTO;
 import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
@@ -29,27 +30,53 @@ PlaceManagementService {
     // Este metodo crea un nuevo lugar utilizando los datos recibidos en el DTO.
     // El servicio se encarga de crear el objeto  a partir de los datos recibidos,
     // lo guarda en el repositorio y luego genera una respuesta adecuada.
-    public OurPlacesDTO addPlace(OurPlacesDTO place) {
+    /*
+    Instanciación de OurPlacesDTO desde un objeto de tipo DTO:
+    El metodo addPlace recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof OurPlacesDTO verifica si el objeto dto es una instancia de OurPlacesDTO,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo OurPlacesDTO. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo OurPlacesDTO:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto dto a OurPlacesDTO.
+    Esto significa que el objeto dto es tratado como un OurPlacesDTO dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de OurPlacesDTO sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+
+    Utilización de datos para crear y guardar un lugar:
+    Una vez verificado y casteado el DTO como OurPlacesDTO, se procede a crear un objeto de tipo OurPlaces
+    y a establecer sus valores mediante los datos provenientes del DTO. Luego, el lugar se guarda en el repositorio mediante placeRepo.save().
+    Si el lugar se guarda exitosamente (es decir, si el id del lugar es mayor a 0), se actualizan los valores de la respuesta y se indica que el lugar fue guardado correctamente.
+    En caso contrario, se devuelve un mensaje indicando un error en el proceso de guardado.
+    */
+    public OurPlacesDTO addPlace(DTO dto) {
         OurPlacesDTO response = new OurPlacesDTO();
         try {
-            OurPlaces savedPlace = new OurPlaces();
-            savePlace(savedPlace, place.getName(), place.getCapacityGeneral(), place.getCapacityVip(),
-                    place.getCapacityPalco(), place.getState(), place.getCity(),
-                    place.getDirection(), place.getImage());
+            if (dto instanceof OurPlacesDTO place) {
+                OurPlaces savedPlace = new OurPlaces();
 
-            OurPlaces ourPlaceResult = placeRepo.save(savedPlace);
+                savePlace(savedPlace, place.getName(), place.getCapacityGeneral(), place.getCapacityVip(),
+                        place.getCapacityPalco(), place.getState(), place.getCity(),
+                        place.getDirection(), place.getImage());
 
-            if (ourPlaceResult.getId() > 0) {
-                // Crear asientos según las capacidades indicadas
-                createSeatsForPlace(ourPlaceResult, place.getCapacityGeneral(),
-                        place.getCapacityVip(), place.getCapacityPalco(), place);
+                OurPlaces ourPlaceResult = placeRepo.save(savedPlace);
 
-                response.setOurPlaces(ourPlaceResult);
-                response.setMessage("Place Saved Successfully");
-                response.setStatusCode(200);
+                if (ourPlaceResult.getId() > 0) {
+                    // Crear asientos según las capacidades indicadas
+                    createSeatsForPlace(ourPlaceResult, place.getCapacityGeneral(),
+                            place.getCapacityVip(), place.getCapacityPalco(), place);
+
+                    response.setOurPlaces(ourPlaceResult);
+                    response.setMessage("Place Saved Successfully");
+                    response.setStatusCode(200);
+                } else {
+                    response.setMessage("Place not saved due to an unknown error.");
+                    response.setStatusCode(500);
+                }
             } else {
-                response.setMessage("Place not saved due to an unknown error.");
-                response.setStatusCode(500);
+                response.setMessage("Invalid DTO type");
+                response.setStatusCode(400);
             }
 
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.ReqRes;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 import com.chaweDev.conciertosYa.repository.UsersRepo;
@@ -26,27 +27,56 @@ public class UsersManagementService implements IUsersManagementService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ReqRes register(ReqRes registrationRequest) {
+    /*
+    Instanciación de ReqRes desde un objeto de tipo DTO:
+    El metodo register recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof ReqRes verifica si el objeto registrationRequest es una instancia de ReqRes,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo ReqRes. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo ReqRes:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto registrationRequest a ReqRes.
+    Esto significa que el objeto registrationRequest es tratado como un ReqRes dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de ReqRes sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+
+    Utilización de datos para crear y guardar un usuario:
+    Una vez verificado y casteado el DTO como ReqRes, se procede a crear un objeto de tipo OurUsers
+    y a establecer sus valores mediante los datos provenientes del DTO. Luego, el usuario se guarda en el repositorio mediante usersRepo.save().
+    Si el usuario se guarda exitosamente (es decir, si el id del usuario es mayor a 0), se actualizan los valores de la respuesta y se indica que el usuario fue guardado correctamente.
+    En caso contrario, se devuelve un mensaje indicando un error en el proceso de guardado.
+    */
+    public ReqRes register(DTO dto) {
         ReqRes resp = new ReqRes();
 
         try {
-            OurUsers ourUser = new OurUsers();
-            ourUser.setEmail(registrationRequest.getEmail());
-            ourUser.setCity(registrationRequest.getCity());
-            ourUser.setRole(registrationRequest.getRole());
-            ourUser.setName(registrationRequest.getName());
-            ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+            // Verifica que el DTO sea de tipo ReqRes
+            if (dto instanceof ReqRes registrationRequest) {
+                OurUsers ourUser = new OurUsers();
 
-            // Guarda el usuario en la base de datos
-            OurUsers ourUsersResult = usersRepo.save(ourUser);
+                // Establece los valores del objeto OurUsers a partir del DTO
+                ourUser.setEmail(registrationRequest.getEmail());
+                ourUser.setCity(registrationRequest.getCity());
+                ourUser.setRole(registrationRequest.getRole());
+                ourUser.setName(registrationRequest.getName());
+                ourUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
-            if (ourUsersResult.getId() > 0) {
-                resp.setOurUsers(ourUsersResult);
-                resp.setMessage("User Saved Successfully");
-                resp.setStatusCode(200);
+                // Guarda el usuario en la base de datos
+                OurUsers ourUsersResult = usersRepo.save(ourUser);
+
+                // Verifica si el usuario fue guardado exitosamente
+                if (ourUsersResult.getId() > 0) {
+                    resp.setOurUsers(ourUsersResult);
+                    resp.setMessage("User Saved Successfully");
+                    resp.setStatusCode(200);
+                } else {
+                    resp.setMessage("User not saved due to an unknown error.");
+                    resp.setStatusCode(500);
+                }
             } else {
-                resp.setMessage("User not saved due to an unknown error.");
-                resp.setStatusCode(500);
+                resp.setMessage("Invalid DTO type");
+                resp.setStatusCode(400);
             }
 
         } catch (Exception e) {
@@ -56,31 +86,58 @@ public class UsersManagementService implements IUsersManagementService {
         }
         return resp;
     }
-    public ReqRes login(ReqRes loginRequest){
+
+    /*
+    Instanciación de ReqRes desde un objeto de tipo DTO:
+    El metodo login recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof ReqRes verifica si el objeto dto es una instancia de ReqRes,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo ReqRes. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo ReqRes:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto dto a ReqRes.
+    Esto significa que el objeto dto es tratado como un ReqRes dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de ReqRes sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+
+    Proceso de autenticación y generación de tokens:
+    Una vez verificado y casteado el DTO como ReqRes, se procede a autenticar al usuario utilizando el email y la contraseña proporcionados en el DTO.
+    Si la autenticación es exitosa, se obtiene el usuario desde el repositorio y se genera un token JWT y un refresh token.
+    Luego, se establecen los valores en la respuesta, incluyendo el ID del usuario, el rol, el token JWT, el refresh token, el tiempo de expiración y un mensaje de éxito.
+    Si ocurre algún error durante este proceso, se captura la excepción y se establece un mensaje de error en la respuesta.
+    */
+    public ReqRes login(DTO dto) {
         ReqRes response = new ReqRes();
         try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                            loginRequest.getPassword()));
-            var user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow();
-            var jwt = jwtUtils.generateToken(user);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-            response.setStatusCode(200);
-            response.setToken(jwt);
-            response.setId(user.getId());
-            response.setRole(user.getRole());
-            response.setRefreshToken(refreshToken);
-            response.setExpirationTime("24Hrs");
-            response.setMessage("Successfully Logged In");
+            if (dto instanceof ReqRes loginRequest) {
+                authenticationManager
+                        .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+                                loginRequest.getPassword()));
 
-        }catch (Exception e){
+                var user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow();
+                var jwt = jwtUtils.generateToken(user);
+                var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+
+                response.setStatusCode(200);
+                response.setToken(jwt);
+                response.setId(user.getId());
+                response.setRole(user.getRole());
+                response.setRefreshToken(refreshToken);
+                response.setExpirationTime("24Hrs");
+                response.setMessage("Successfully Logged In");
+
+            } else {
+                response.setMessage("Invalid DTO type");
+                response.setStatusCode(400);
+            }
+
+        } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
         }
         return response;
     }
-
-
 
     public ReqRes refreshToken(ReqRes refreshTokenReqiest){
         ReqRes response = new ReqRes();
