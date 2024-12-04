@@ -203,6 +203,19 @@ class UserService{
         }
     }
     
+    static async createInvoice(invoiceData, token) {
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/invoices/add`, invoiceData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                console.error(`Error: ${err.response.status} - ${err.response.data.message}`);
+            }
+            throw err;
+        }
+    }
     
 
     static async getYourProfile(token){

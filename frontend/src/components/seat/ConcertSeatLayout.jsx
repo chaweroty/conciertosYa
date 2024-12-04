@@ -69,6 +69,7 @@ const ConcertSeatLayout = ({ seats, eventDetails  }) => {
                         isSelected={selectedSeats.some((s) => s.id === seat.id)}
                         onClick={() => handleSeatClick(seat)}
                         seatType={seat.type}
+                        seatState={seat.state}
                       />
                     ))}
                 </div>
@@ -91,7 +92,7 @@ const ConcertSeatLayout = ({ seats, eventDetails  }) => {
         <div className="flex items-center gap-x-2">
           <MdOutlineChair className="text-lg text-red-500 -rotate-300" />
           <p className="text-neutral-900 dark:text-neutral-200 text-sm font-normal">
-            Reservado
+            Vendido
           </p>
         </div>
         <div className="flex items-center gap-x-2">
