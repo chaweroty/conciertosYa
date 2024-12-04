@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
 import com.chaweDev.conciertosYa.entity.OurSeats;
@@ -13,6 +14,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+// PRINCIPIO DE EXPERTO EN INFORMACIÓN (Information Expert):
+// El servicio es el experto en la gestión de los asientos.
+// Contiene la lógica para manipular los datos relacionados con la gestion de los asientos,
+// como guardarlos, obtenerlos, actualizarlos y eliminarlos, y tiene acceso
+// al repositorio donde se encuentran los datos de los asientos.
 @Service
 public class SeatManagementService {
 
@@ -21,21 +27,52 @@ public class SeatManagementService {
     @Autowired
     private PlaceRepo placeRepo;
 
-    public OurSeatsDTO addSeat(OurSeatsDTO seat) {
+    // PRINCIPIO DE CREADOR (Creator):
+    // Este metodo crea un nuevo asiento utilizando los datos recibidos en el DTO.
+    // El servicio se encarga de crear el objeto  a partir de los datos recibidos,
+    // lo guarda en el repositorio y luego genera una respuesta adecuada.
+    /*
+    Instanciación de OurSeatsDTO desde un objeto de tipo DTO:
+    El metodo addSeat recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof OurSeatsDTO verifica si el objeto dto es una instancia de OurSeatsDTO,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo OurSeatsDTO. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo OurSeatsDTO:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto dto a OurSeatsDTO.
+    Esto significa que el objeto dto es tratado como un OurSeatsDTO dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de OurSeatsDTO sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+
+    Utilización de datos para crear y guardar un asiento:
+    Una vez verificado y casteado el DTO como OurSeatsDTO, se procede a crear un objeto de tipo OurSeats
+    y a establecer sus valores mediante los datos provenientes del DTO. Luego, el asiento se guarda en el repositorio mediante seatRepo.save().
+    Si el asiento se guarda exitosamente (es decir, si el id del asiento es mayor a 0), se actualizan los valores de la respuesta y se indica que el asiento fue guardado correctamente.
+    En caso contrario, se devuelve un mensaje indicando un error en el proceso de guardado.
+    */
+
+    public OurSeatsDTO addSeat(DTO dto) {
         OurSeatsDTO response = new OurSeatsDTO();
         try {
-            OurSeats ourSeat = new OurSeats();
+            if (dto instanceof OurSeatsDTO seat) {
+                OurSeats ourSeat = new OurSeats();
 
-            saveSeat(seat, ourSeat);
+                // Se asume que la función saveSeat toma el DTO y el objeto OurSeats para asignar sus valores.
+                saveSeat(seat, ourSeat);
 
-            OurSeats ourSeatResult = seatRepo.save(ourSeat);
-            if (ourSeatResult.getId() > 0) {
-                response.setOurSeats(ourSeatResult);
-                response.setMessage("Seat Saved Successfully");
-                response.setStatusCode(200);
+                OurSeats ourSeatResult = seatRepo.save(ourSeat);
+                if (ourSeatResult.getId() > 0) {
+                    response.setOurSeats(ourSeatResult);
+                    response.setMessage("Seat Saved Successfully");
+                    response.setStatusCode(200);
+                } else {
+                    response.setMessage("Seat not saved due to an unknown error.");
+                    response.setStatusCode(500);
+                }
             } else {
-                response.setMessage("Seat not saved due to an unknown error.");
-                response.setStatusCode(500);
+                response.setMessage("Invalid DTO type");
+                response.setStatusCode(400);
             }
 
         } catch (Exception e) {

@@ -11,6 +11,11 @@ import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
+// PRINCIPIO DE EXPERTO EN INFORMACIÓN (Information Expert):
+// El servicio es el experto en la gestión de los lugares.
+// Contiene la lógica para manipular los datos relacionados con la gestion de los lugares,
+// como guardarlos, obtenerlos, actualizarlos y eliminarlos, y tiene acceso
+// al repositorio donde se encuentran los datos de los lugares.
 @Service
 public class
 PlaceManagementService {
@@ -20,6 +25,10 @@ PlaceManagementService {
     @Autowired
     private SeatManagementService seatService;
 
+    // PRINCIPIO DE CREADOR (Creator):
+    // Este metodo crea un nuevo lugar utilizando los datos recibidos en el DTO.
+    // El servicio se encarga de crear el objeto  a partir de los datos recibidos,
+    // lo guarda en el repositorio y luego genera una respuesta adecuada.
     public OurPlacesDTO addPlace(OurPlacesDTO place) {
         OurPlacesDTO response = new OurPlacesDTO();
         try {

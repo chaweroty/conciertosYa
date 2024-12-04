@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurEventsDTO;
 import com.chaweDev.conciertosYa.entity.OurArtists;
 import com.chaweDev.conciertosYa.entity.OurEvents;
@@ -19,21 +20,47 @@ public class EventManagementService {
     @Autowired
     private EventRepo eventRepo;
 
-    public OurEventsDTO addEvent(OurEventsDTO event) {
+    /*
+    Instanciación de OurEventsDTO desde un objeto de tipo DTO:
+    El metodo addEvent recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof OurEventsDTO verifica si el objeto dto es una instancia de OurEventsDTO,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo OurEventsDTO. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo OurEventsDTO:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto dto a OurEventsDTO.
+    Esto significa que el objeto dto es tratado como un OurEventsDTO dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de OurEventsDTO sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+
+    Utilización de datos para crear y guardar un evento:
+    Una vez verificado y casteado el DTO como OurEventsDTO, se procede a crear un objeto de tipo OurEvents
+    y a establecer sus valores mediante los datos provenientes del DTO. Luego, el evento se guarda en el repositorio mediante eventRepo.save().
+    Si el evento se guarda exitosamente (es decir, si el id del evento es mayor a 0), se actualizan los valores de la respuesta y se indica que el evento fue guardado correctamente.
+    En caso contrario, se devuelve un mensaje indicando un error en el proceso de guardado.
+    */
+    public OurEventsDTO addEvent(DTO dto) {
         OurEventsDTO response = new OurEventsDTO();
         try {
-            OurEvents savedEvent = new OurEvents();
+            if (dto instanceof OurEventsDTO event) {
+                OurEvents savedEvent = new OurEvents();
 
-            saveEvent(savedEvent, event.getName(), event.getDate(), event.getHour(), event.getDescription(), event.getMusicalGenre(), event.getStatus(), event.getImage(), event.getPlace(), event.getArtist());
+                saveEvent(savedEvent, event.getName(), event.getDate(), event.getHour(), event.getDescription(), event.getMusicalGenre(), event.getStatus(), event.getImage(), event.getPlace(), event.getArtist());
 
-            OurEvents ourEventResult = eventRepo.save(savedEvent);
-            if (savedEvent.getId() > 0) {
-                response.setOurEvents(ourEventResult);
-                response.setMessage("Event Saved Successfully");
-                response.setStatusCode(200);
+                OurEvents ourEventResult = eventRepo.save(savedEvent);
+
+                if (ourEventResult.getId() > 0) {
+                    response.setOurEvents(ourEventResult);
+                    response.setMessage("Event Saved Successfully");
+                    response.setStatusCode(200);
+                } else {
+                    response.setMessage("Event not saved due to an unknown error.");
+                    response.setStatusCode(500);
+                }
             } else {
-                response.setMessage("Event not saved due to an unknown error.");
-                response.setStatusCode(500);
+                response.setMessage("Invalid DTO type");
+                response.setStatusCode(400);
             }
 
         } catch (Exception e) {

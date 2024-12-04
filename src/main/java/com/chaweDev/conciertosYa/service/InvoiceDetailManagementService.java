@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
 import com.chaweDev.conciertosYa.entity.Invoice;
 import com.chaweDev.conciertosYa.entity.InvoiceDetail;
@@ -18,30 +19,56 @@ public class InvoiceDetailManagementService {
     @Autowired
     private InvoiceDetailRepo invoiceDetailRepo;
 
-    public InvoiceDetailDTO addInvoiceDetail(InvoiceDetailDTO invoiceDetail) {
+    /*
+    Instanciación de InvoiceDetailDTO desde un objeto de tipo DTO:
+    El metodo addInvoiceDetail recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof InvoiceDetailDTO verifica si el objeto invoiceDetail es una instancia de InvoiceDetailDTO,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo InvoiceDetailDTO. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo InvoiceDetailDTO:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto invoiceDetail a InvoiceDetailDTO.
+    Esto significa que el objeto invoiceDetail es tratado como un InvoiceDetailDTO dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de InvoiceDetailDTO sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+
+    Utilización de datos para crear y guardar un detalle de factura:
+    Una vez verificado y casteado el DTO como InvoiceDetailDTO, se procede a crear un objeto de tipo InvoiceDetail
+    y a establecer sus valores mediante los datos provenientes del DTO. Luego, el detalle de la factura se guarda en el repositorio mediante invoiceDetailRepo.save().
+    Si el detalle de la factura se guarda exitosamente (es decir, si el id del detalle es mayor a 0), se actualizan los valores de la respuesta y se indica que el detalle de la factura fue guardado correctamente.
+    En caso contrario, se devuelve un mensaje indicando un error en el proceso de guardado.
+    */
+
+    public InvoiceDetailDTO addInvoiceDetail(DTO dto) {
         InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {
-            InvoiceDetail savedInvoiceDetail = new InvoiceDetail();
+            if (dto instanceof InvoiceDetailDTO invoiceDetail) {
+                InvoiceDetail savedInvoiceDetail = new InvoiceDetail();
 
-            saveInvoiceDetail(savedInvoiceDetail, invoiceDetail.getTicket(), invoiceDetail.getInvoice());
+                saveInvoiceDetail(savedInvoiceDetail, invoiceDetail.getTicket(), invoiceDetail.getInvoice());
 
-            InvoiceDetail updatedInvoiceDetail = invoiceDetailRepo.save(savedInvoiceDetail);
+                InvoiceDetail updatedInvoiceDetail = invoiceDetailRepo.save(savedInvoiceDetail);
 
-            if (updatedInvoiceDetail.getId() > 0) {
-                response.setOurInvoiceDetail(updatedInvoiceDetail);
-                response.setMessage("Invoice detail Saved Successfully");
-                response.setStatusCode(200);
+                if (updatedInvoiceDetail.getId() > 0) {
+                    response.setOurInvoiceDetail(updatedInvoiceDetail);
+                    response.setMessage("Invoice detail Saved Successfully");
+                    response.setStatusCode(200);
+                } else {
+                    response.setMessage("Invoice detail not saved due to an unknown error.");
+                    response.setStatusCode(500);
+                }
             } else {
-                response.setMessage("Invoice detail not saved due to an unknown error.");
-                response.setStatusCode(500);
+                response.setMessage("Invalid DTO type");
+                response.setStatusCode(400);
             }
+
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred: " + e.getMessage());
         }
         return response;
     }
-
     public InvoiceDetailDTO getAllInvoiceDetails() {
         InvoiceDetailDTO response = new InvoiceDetailDTO();
         try {

@@ -1,5 +1,6 @@
 package com.chaweDev.conciertosYa.service;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurArtistsDTO;
 import com.chaweDev.conciertosYa.entity.OurArtists;
 import com.chaweDev.conciertosYa.repository.ArtistRepo;
@@ -15,26 +16,44 @@ public class ArtistManagementService {
     @Autowired
     private ArtistRepo artistRepo;
 
-    public OurArtistsDTO addArtist(OurArtistsDTO artist) {
+    /*
+    Instanciación de OurArtistsDTO desde un objeto de tipo DTO:
+    El metodo addArtist recibe un parámetro de tipo DTO, que podría ser cualquier objeto que implemente la interfaz DTO.
+    La expresión instanceof OurArtistsDTO verifica si el objeto dto es una instancia de OurArtistsDTO,
+    lo que permite que se pueda tratar específicamente como un objeto de tipo OurArtistsDTO. Si el objeto es de ese tipo,
+    el código dentro del bloque if se ejecuta.
+
+    Asignación a una variable del tipo OurArtistsDTO:
+    El uso de instanceof no solo verifica el tipo del objeto,
+    sino que también realiza un casting implícito del objeto dto a OurArtistsDTO.
+    Esto significa que el objeto dto es tratado como un OurArtistsDTO dentro del bloque if.
+    Esta técnica permite que se puedan acceder de manera directa a los métodos y propiedades específicos de OurArtistsDTO sin necesidad de hacer un cast manual,
+    y es posible gracias al polimorfismo.
+    * */
+    public OurArtistsDTO addArtist(DTO dto) {
         OurArtistsDTO response = new OurArtistsDTO();
         try {
+            if (dto instanceof OurArtistsDTO artist) {
 
-            OurArtists savedArtist = new OurArtists();
+                OurArtists savedArtist = new OurArtists();
+                savedArtist.setName(artist.getName());
+                savedArtist.setMusicalGenre(artist.getMusicalGenre());
+                savedArtist.setInstagram(artist.getInstagram());
+                savedArtist.setFacebook(artist.getFacebook());
+                savedArtist.setContact(artist.getContact());
 
-            savedArtist.setName(artist.getName());
-            savedArtist.setMusicalGenre(artist.getMusicalGenre());
-            savedArtist.setInstagram(artist.getInstagram());
-            savedArtist.setFacebook(artist.getFacebook());
-            savedArtist.setContact(artist.getContact());
-
-            OurArtists ourArtistResult = artistRepo.save(savedArtist);
-            if (ourArtistResult.getId() > 0) {
-                response.setOurArtists(ourArtistResult);
-                response.setMessage("Artist Saved Successfully");
-                response.setStatusCode(200);
+                OurArtists ourArtistResult = artistRepo.save(savedArtist);
+                if (ourArtistResult.getId() > 0) {
+                    response.setOurArtists(ourArtistResult);
+                    response.setMessage("Artist Saved Successfully");
+                    response.setStatusCode(200);
+                } else {
+                    response.setMessage("Artist not saved due to an unknown error.");
+                    response.setStatusCode(500);
+                }
             } else {
-                response.setMessage("Artist not saved due to an unknown error.");
-                response.setStatusCode(500);
+                response.setMessage("Invalid DTO type");
+                response.setStatusCode(400);
             }
         } catch (Exception e) {
             response.setStatusCode(500);

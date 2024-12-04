@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// PRINCIPIO DE EXPERTO EN INFORMACIÓN (Information Expert):
+// El servicio es el experto en la gestión de las facturas.
+// Contiene la lógica para manipular los datos relacionados con la gestion de la factura,
+// como guardarlos, obtenerlos, actualizarlos y eliminarlos, y tiene acceso
+// al repositorio donde se encuentran los datos de las facturas.
 @Service
 public class InvoiceManagementService {
 
@@ -28,6 +33,10 @@ public class InvoiceManagementService {
     @Autowired
     private SeatManagementService seatService;
 
+    // PRINCIPIO DE CREADOR (Creator):
+    // Este metodo crea una nueva factura utilizando los datos recibidos en el DTO.
+    // El servicio se encarga de crear el objeto  a partir de los datos recibidos,
+    // lo guarda en el repositorio y luego genera una respuesta adecuada.
     public InvoiceRequestDTO addInvoice(InvoiceRequestDTO invoiceRequestDTO) {
         InvoiceRequestDTO response = new InvoiceRequestDTO();
         try {

@@ -53,6 +53,9 @@ public class UserManagementController {
         return  ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    // Principio aplicado: Responsabilidad Única
+    // Este metodo está específicamente diseñado para manejar la eliminación de un usuario,
+    // asegurando que el controlador esté enfocado en su propósito principal.
     @DeleteMapping("/admin/delete/{userId}")
     public ResponseEntity<ReqRes> deleteUSer(@PathVariable Integer userId){
         return ResponseEntity.ok(usersManagementService.deleteUser(userId));
