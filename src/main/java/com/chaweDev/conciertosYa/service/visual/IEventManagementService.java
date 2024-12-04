@@ -1,10 +1,11 @@
-package com.chaweDev.conciertosYa.service.Visual;
+package com.chaweDev.conciertosYa.service.visual;
 
+import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurEventsDTO;
 import com.chaweDev.conciertosYa.entity.OurEvents;
 
 public interface IEventManagementService {
-    OurEventsDTO addEvent(OurEventsDTO event);
+    OurEventsDTO addEvent(DTO event);
 
     OurEventsDTO getAllEvents();
 

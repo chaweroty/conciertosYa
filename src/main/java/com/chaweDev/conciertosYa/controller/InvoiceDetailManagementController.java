@@ -1,6 +1,6 @@
 package com.chaweDev.conciertosYa.controller;
 
-import com.chaweDev.conciertosYa.service.Visual.IInvoiceDetailManagementService;
+import com.chaweDev.conciertosYa.service.visual.IInvoiceDetailManagementService;
 import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
 import com.chaweDev.conciertosYa.entity.InvoiceDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class InvoiceDetailManagementController {
 
     @GetMapping("/get-invoice-tickets/{invoiceId}")
     public ResponseEntity<InvoiceDetailDTO> getInvoiceTicketsByInvoiceId(@PathVariable Integer invoiceId) {
-        return ResponseEntity.ok(invoiceDetailManagementService.getInvoiceTicketsByInvoiceId(invoiceId));
+        return ResponseEntity.ok(invoiceDetailManagementService.getInvoiceDetailById(invoiceId));
     }
 
     // Principio aplicado: Abierto/Cerrado (OCP)

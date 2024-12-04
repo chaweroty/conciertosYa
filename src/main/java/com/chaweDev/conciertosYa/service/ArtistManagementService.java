@@ -4,6 +4,7 @@ import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.OurArtistsDTO;
 import com.chaweDev.conciertosYa.entity.OurArtists;
 import com.chaweDev.conciertosYa.repository.ArtistRepo;
+import com.chaweDev.conciertosYa.service.visual.IArtistManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ArtistManagementService {
+public class ArtistManagementService implements IArtistManagementService {
 
     @Autowired
     private ArtistRepo artistRepo;

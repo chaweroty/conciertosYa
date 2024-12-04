@@ -1,6 +1,6 @@
 package com.chaweDev.conciertosYa.controller;
 
-import com.chaweDev.conciertosYa.service.Visual.IInvoiceManagementService;
+import com.chaweDev.conciertosYa.service.visual.IInvoiceManagementService;
 import com.chaweDev.conciertosYa.dto.InvoiceDTO;
 import com.chaweDev.conciertosYa.dto.InvoiceRequestDTO;
 import com.chaweDev.conciertosYa.entity.Invoice;

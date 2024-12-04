@@ -6,6 +6,7 @@ import com.chaweDev.conciertosYa.entity.OurPlaces;
 import com.chaweDev.conciertosYa.entity.OurSeats;
 import com.chaweDev.conciertosYa.repository.SeatRepo;
 import com.chaweDev.conciertosYa.repository.PlaceRepo;
+import com.chaweDev.conciertosYa.service.visual.ISeatManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import java.util.Optional;
 // como guardarlos, obtenerlos, actualizarlos y eliminarlos, y tiene acceso
 // al repositorio donde se encuentran los datos de los asientos.
 @Service
-public class SeatManagementService {
+public class SeatManagementService implements ISeatManagementService {
 
     @Autowired
     private SeatRepo seatRepo;
@@ -140,14 +141,14 @@ public class SeatManagementService {
         return response;
     }
 
-    public OurSeatsDTO updateSeat(Integer seatId, OurSeatsDTO seat) {
+    public OurSeatsDTO updateSeat(Integer seatId, DTO seat) {
         OurSeatsDTO response = new OurSeatsDTO();
         try {
             Optional<OurSeats> existingSeatOpt = seatRepo.findById(seatId);
             if (existingSeatOpt.isPresent()) {
                 OurSeats existingSeat = existingSeatOpt.get();
 
-                saveSeat(seat, existingSeat);
+                saveSeat((OurSeatsDTO) seat, existingSeat);
 
                 OurSeats updatedSeat = seatRepo.save(existingSeat);
 

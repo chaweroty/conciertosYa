@@ -1,6 +1,6 @@
 package com.chaweDev.conciertosYa.controller;
 
-import com.chaweDev.conciertosYa.service.Visual.IPlaceManagementService;
+import com.chaweDev.conciertosYa.service.visual.IPlaceManagementService;
 import com.chaweDev.conciertosYa.dto.OurPlacesDTO;
 import com.chaweDev.conciertosYa.entity.OurPlaces;
 import org.springframework.beans.factory.annotation.Autowired;

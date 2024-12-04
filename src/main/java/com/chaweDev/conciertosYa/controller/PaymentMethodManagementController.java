@@ -1,6 +1,6 @@
 package com.chaweDev.conciertosYa.controller;
 
-import com.chaweDev.conciertosYa.service.Visual.IPaymentMethodManagementService;
+import com.chaweDev.conciertosYa.service.visual.IPaymentMethodManagementService;
 import com.chaweDev.conciertosYa.dto.PaymentMethodDTO;
 import com.chaweDev.conciertosYa.entity.PaymentMethod;
 import org.springframework.beans.factory.annotation.Autowired;

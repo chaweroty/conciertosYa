@@ -1,6 +1,6 @@
 package com.chaweDev.conciertosYa.controller;
 
-import com.chaweDev.conciertosYa.service.Visual.ITicketManagementService;
+import com.chaweDev.conciertosYa.service.visual.ITicketManagementService;
 import com.chaweDev.conciertosYa.dto.OurTicketsDTO;
 import com.chaweDev.conciertosYa.entity.OurTickets;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.chaweDev.conciertosYa.controller;
 
-import com.chaweDev.conciertosYa.service.Visual.ISeatManagementService;
+import com.chaweDev.conciertosYa.service.visual.ISeatManagementService;
 import com.chaweDev.conciertosYa.dto.OurSeatsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

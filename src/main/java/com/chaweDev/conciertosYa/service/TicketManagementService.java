@@ -8,6 +8,7 @@ import com.chaweDev.conciertosYa.entity.OurSeats;
 import com.chaweDev.conciertosYa.entity.OurTickets;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 import com.chaweDev.conciertosYa.repository.TicketRepo;
+import com.chaweDev.conciertosYa.service.visual.ITicketManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TicketManagementService {
+public class TicketManagementService implements ITicketManagementService {
 
     @Autowired
     private TicketRepo ticketRepo;
