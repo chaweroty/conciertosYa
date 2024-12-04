@@ -44,8 +44,14 @@ const PlaceTable = () => {
     setModalData({
       name: "",
       capacityGeneral: "",
+      priceGen: "",
+      discountGen: "",
       capacityVip: "",
+      priceVip: "",
+      discountVip: "",
       capacityPalco: "",
+      pricePalco: "",
+      discountPalco: "",
       state: "",
       city: "",
       direction: "",
@@ -83,8 +89,14 @@ const PlaceTable = () => {
     const {
       name,
       capacityGeneral,
+      priceGen,
+      discountGen,
       capacityVip,
+      priceVip,
+      discountVip,
       capacityPalco,
+      pricePalco,
+      discountPalco,
       state,
       city,
       direction,
@@ -93,8 +105,14 @@ const PlaceTable = () => {
     if (
       !name ||
       !capacityGeneral ||
+      !priceGen ||
+      !discountGen ||
       !capacityVip ||
+      !priceVip ||
+      !discountVip ||
       !capacityPalco ||
+      !pricePalco ||
+      !discountPalco ||
       !state ||
       !city ||
       !direction ||
@@ -105,6 +123,7 @@ const PlaceTable = () => {
     }
     return true;
   };
+
   const handleSave = async () => {
     if (!validateData()) {
       return;
@@ -126,10 +145,11 @@ const PlaceTable = () => {
       setShowModal(false);
       fetchPlaces();
     } catch (err) {
-      setError("Error al guardar el evento.");
-      console.error("Error saving event:", err);
+      setError("Error al guardar el lugar.");
+      console.error("Error saving place:", err);
     }
   };
+
   const handleCancel = () => {
     setShowModal(false);
     setModalData(null);
@@ -256,10 +276,10 @@ const PlaceTable = () => {
 
               <div className="mb-4">
                 <label className="block text-sm font-semibold">
-                  Capacida de General
+                  Capacidad General
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   value={modalData.capacityGeneral}
                   onChange={(e) =>
                     setModalData({
@@ -272,11 +292,37 @@ const PlaceTable = () => {
               </div>
 
               <div className="mb-4">
+                <label className="block text-sm font-semibold">Precio General</label>
+                <input
+                  type="number"
+                  value={modalData.priceGen}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, priceGen: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
                 <label className="block text-sm font-semibold">
-                  Capacida de VIP
+                  Descuento General
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  value={modalData.discountGen}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, discountGen: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Capacidad VIP
+                </label>
+                <input
+                  type="number"
                   value={modalData.capacityVip}
                   onChange={(e) =>
                     setModalData({ ...modalData, capacityVip: e.target.value })
@@ -286,16 +332,73 @@ const PlaceTable = () => {
               </div>
 
               <div className="mb-4">
+                <label className="block text-sm font-semibold">Precio VIP</label>
+                <input
+                  type="number"
+                  value={modalData.priceVip}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, priceVip: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
                 <label className="block text-sm font-semibold">
-                  Capacida de palco
+                  Descuento VIP
                 </label>
                 <input
-                  type="text"
+                  type="number"
+                  value={modalData.discountVip}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, discountVip: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Capacidad Palco
+                </label>
+                <input
+                  type="number"
                   value={modalData.capacityPalco}
                   onChange={(e) =>
                     setModalData({
                       ...modalData,
                       capacityPalco: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Precio Palco
+                </label>
+                <input
+                  type="number"
+                  value={modalData.pricePalco}
+                  onChange={(e) =>
+                    setModalData({ ...modalData, pricePalco: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold">
+                  Descuento Palco
+                </label>
+                <input
+                  type="number"
+                  value={modalData.discountPalco}
+                  onChange={(e) =>
+                    setModalData({
+                      ...modalData,
+                      discountPalco: e.target.value,
                     })
                   }
                   className="w-full p-2 border border-gray-300 rounded"
@@ -315,7 +418,7 @@ const PlaceTable = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-semibold">ciudad</label>
+                <label className="block text-sm font-semibold">Ciudad</label>
                 <input
                   type="text"
                   value={modalData.city}
@@ -327,7 +430,7 @@ const PlaceTable = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-semibold">Direccion</label>
+                <label className="block text-sm font-semibold">Dirección</label>
                 <input
                   type="text"
                   value={modalData.direction}
@@ -341,7 +444,7 @@ const PlaceTable = () => {
               <div className="mb-4">
                 <label className="block text-sm font-semibold">Imagen</label>
                 <input
-                  type="number"
+                  type="text"
                   value={modalData.image}
                   onChange={(e) =>
                     setModalData({ ...modalData, image: e.target.value })
@@ -349,21 +452,22 @@ const PlaceTable = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
-              <div className="flex justify-end">
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 bg-gray-300 rounded mr-2"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Guardar
-                </button>
-              </div>
             </form>
+
+            <div className="flex justify-between">
+              <button
+                onClick={handleCancel}
+                className="px-4 py-2 bg-gray-300 text-white rounded"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Guardar
+              </button>
+            </div>
           </div>
         </div>
       )}
