@@ -17,7 +17,6 @@ const EventsTable = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Token (en un caso real, obtén esto de localStorage o de un contexto global)
   const token = localStorage.getItem("token");
   useEffect(() => {
     fetchEvents();
@@ -42,10 +41,10 @@ const EventsTable = () => {
       setLoading(true);
       const response = await axios.get(`${API_URL}/get-all`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+          Authorization: `Bearer ${token}`,
         },
       });
-      setEvents(response.data.ourEventsList || []); // Actualiza los datos de eventos
+      setEvents(response.data.ourEventsList || []); 
     } catch (err) {
       setError(
         "Error al obtener los eventos. Verifica tu conexión o permisos."
@@ -63,8 +62,8 @@ const EventsTable = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Datos de artistas:", response.data); // Verifica la estructura de los datos
-      setArtists(response.data.ourArtistsList || []); // Ajusta según la clave correcta del backend
+      console.log("Datos de artistas:", response.data); 
+      setArtists(response.data.ourArtistsList || []); 
     } catch (err) {
       console.error("Error al obtener los artistas:", err);
       setError(
@@ -80,8 +79,8 @@ const EventsTable = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Datos de lugares:", response.data); // Verifica la estructura de los datos
-      setplaces(response.data.ourPlacesList || []); // Ajusta según la clave correcta del backend
+      console.log("Datos de lugares:", response.data);
+      setplaces(response.data.ourPlacesList || []); 
     } catch (err) {
       console.error("Error al obtener los lugares:", err);
       setError(
@@ -132,8 +131,28 @@ const EventsTable = () => {
   };
 
   const validateData = () => {
-    const { name, date, hour, description, musicalGenre, status, image, place, artist } = modalData;
-    if (!name || !date || !hour || !description || !musicalGenre || !status || !image || !place?.id || !artist?.id) {
+    const {
+      name,
+      date,
+      hour,
+      description,
+      musicalGenre,
+      status,
+      image,
+      place,
+      artist,
+    } = modalData;
+    if (
+      !name ||
+      !date ||
+      !hour ||
+      !description ||
+      !musicalGenre ||
+      !status ||
+      !image ||
+      !place?.id ||
+      !artist?.id
+    ) {
       setError("Todos los campos son obligatorios.");
       return false;
     }
@@ -164,9 +183,8 @@ const EventsTable = () => {
       console.error("Error saving event:", err);
     }
   };
-  
 
-  // Función para cerrar el modal sin hacer cambios
+  
   const handleCancel = () => {
     setShowModal(false);
     setModalData(null);

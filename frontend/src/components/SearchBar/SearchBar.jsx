@@ -16,7 +16,7 @@ const SearchBar = ({ value, onChange }) => {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         placeholder="Buscar por artista, lugar o fecha "
-        className={`w-full py-2 pl-11 pr-6 text-gray-700 bg-white border rounded-full outline-none transition-all ${
+        className={`w-full py-3 pl-11 pr-6 text-gray-700 bg-white border rounded-full outline-none transition-all ${
           focused ? "border-blue-500" : "border-gray-300"
         }`}
       />
