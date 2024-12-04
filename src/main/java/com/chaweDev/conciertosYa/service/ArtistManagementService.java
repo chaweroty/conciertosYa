@@ -68,7 +68,7 @@ public class ArtistManagementService {
             }
         } catch (Exception e) {
             response = new OurArtistsDTO.Builder()
-                    .message("Error occurred: " + e.getMessage())
+                    .message("Error occurred: ")
                     .statusCode(500)
                     .build();
 

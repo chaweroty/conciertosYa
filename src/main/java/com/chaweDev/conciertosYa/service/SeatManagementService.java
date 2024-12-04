@@ -77,7 +77,7 @@ public class SeatManagementService {
 
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred: " + e.getMessage());
+            response.setMessage("Error occurred: ");
         }
         return response;
     }
