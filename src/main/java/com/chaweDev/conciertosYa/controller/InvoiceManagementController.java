@@ -1,9 +1,9 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.Visual.IInvoiceManagementService;
 import com.chaweDev.conciertosYa.dto.InvoiceDTO;
 import com.chaweDev.conciertosYa.dto.InvoiceRequestDTO;
 import com.chaweDev.conciertosYa.entity.Invoice;
-import com.chaweDev.conciertosYa.service.InvoiceManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class InvoiceManagementController {
     // La dependencia se inyecta a través de la interfaz IInvoiceManagementService, lo que
     // permite cambiar implementaciones sin afectar la lógica del controlador.
     @Autowired
-    private InvoiceManagementService invoiceManagementService;
+    private IInvoiceManagementService invoiceManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // Este metodo se centra exclusivamente en procesar y delegar la lógica de negocio
@@ -52,7 +52,7 @@ public class InvoiceManagementController {
 
     @GetMapping("/get-user-invoices/{userId}")
     public ResponseEntity<InvoiceDTO> getInvoicesByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(invoiceManagementService.getInvoicesByUserId(userId));
+        return ResponseEntity.ok(invoiceManagementService.getInvoiceById(userId));
     }
 
     // Principio aplicado: Reutilización de Código

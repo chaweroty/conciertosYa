@@ -1,4 +1,4 @@
-package com.chaweDev.conciertosYa.controller.Visual;
+package com.chaweDev.conciertosYa.service.Visual;
 
 import com.chaweDev.conciertosYa.dto.OurArtistsDTO;
 import com.chaweDev.conciertosYa.entity.OurArtists;

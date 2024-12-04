@@ -1,8 +1,8 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.Visual.IEventManagementService;
 import com.chaweDev.conciertosYa.dto.OurEventsDTO;
 import com.chaweDev.conciertosYa.entity.OurEvents;
-import com.chaweDev.conciertosYa.service.EventManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class EventManagementController {
     // La interfaz IEventManagementService se inyecta en lugar de una implementación concreta,
     // permitiendo flexibilidad y facilidad de pruebas al desacoplar la lógica de negocio del controlador.
     @Autowired
-    private EventManagementService eventManagementService;
+    private IEventManagementService eventManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // Este metodo maneja la creación de un nuevo evento delegando toda la lógica al servicio.

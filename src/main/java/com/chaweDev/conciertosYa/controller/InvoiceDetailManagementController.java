@@ -1,8 +1,8 @@
 package com.chaweDev.conciertosYa.controller;
 
+import com.chaweDev.conciertosYa.service.Visual.IInvoiceDetailManagementService;
 import com.chaweDev.conciertosYa.dto.InvoiceDetailDTO;
 import com.chaweDev.conciertosYa.entity.InvoiceDetail;
-import com.chaweDev.conciertosYa.service.InvoiceDetailManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class InvoiceDetailManagementController {
     // Al inyectar una interfaz (IInvoiceDetailManagementService) en lugar de una implementación concreta,
     // se permite mayor flexibilidad y capacidad de prueba en el código.
     @Autowired
-    private InvoiceDetailManagementService invoiceDetailManagementService;
+    private IInvoiceDetailManagementService invoiceDetailManagementService;
 
     // Principio aplicado: Separación de Responsabilidades (SRP)
     // Este metodo maneja exclusivamente la lógica de adición de un detalle de factura,

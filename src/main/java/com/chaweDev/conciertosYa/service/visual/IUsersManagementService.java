@@ -1,13 +1,12 @@
-package com.chaweDev.conciertosYa.service.visual;
+package com.chaweDev.conciertosYa.service.Visual;
 
-import com.chaweDev.conciertosYa.dto.DTO;
 import com.chaweDev.conciertosYa.dto.ReqRes;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 
 public interface IUsersManagementService {
-    ReqRes register(DTO reg);
+    ReqRes register(ReqRes reg);
 
-    ReqRes login(DTO req);
+    ReqRes login(ReqRes req);
 
     ReqRes refreshToken(ReqRes req);
 
