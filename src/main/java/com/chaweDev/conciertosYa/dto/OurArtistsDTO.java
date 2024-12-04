@@ -10,11 +10,8 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OurArtistsDTO {
+public class OurArtistsDTO extends DTO{
 
-    private int statusCode;
-    private String error;
-    private String message;
     private String name;
     private String musicalGenre;
     private String instagram;

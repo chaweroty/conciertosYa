@@ -61,7 +61,8 @@ public class InvoiceManagementService {
                     System.out.println("Datos del asiento: " + seatData);
 
                     Double price = seatData.getOurSeats().getPrice();
-                    Double discount = seatData.getDiscount();
+                    Double discount = seatData.getOurSeats().getDiscount();
+                    System.out.println(seatData.getDiscount());
 
                     OurTicketsDTO ticket = new OurTicketsDTO();
                     if (discount != null) {

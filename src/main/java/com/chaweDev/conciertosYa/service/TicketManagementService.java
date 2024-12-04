@@ -37,6 +37,8 @@ public class TicketManagementService {
             updatedSeat.setRow(seatResult.getRow());
             updatedSeat.setColumn(seatResult.getColumn());
             updatedSeat.setType(seatResult.getType());
+            updatedSeat.setPrice(seatResult.getPrice());
+            updatedSeat.setDiscount(seatResult.getDiscount());
             updatedSeat.setState("Sold");
             updatedSeat.setPlace(seatResult.getPlace().getId());
             System.out.println(updatedSeat.getState());

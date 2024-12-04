@@ -11,10 +11,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InvoiceRequestDTO {
-    private int statusCode;
-    private String error;
-    private String message;
+public class InvoiceRequestDTO extends DTO{
     private Integer id;
     private LocalDate issueDate;
     private Double total;

@@ -11,14 +11,12 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaymentMethodDTO {
+public class PaymentMethodDTO extends DTO{
 
-    private int statusCode;
-    private String error;
-    private String message;
     private Integer id;
     private String type; // Cash, Cash and Credit Card, etc.
     private OurUsers client;
     private PaymentMethod paymentMethod;
+
     private List<PaymentMethod> ourPaymentMethodList;
 }

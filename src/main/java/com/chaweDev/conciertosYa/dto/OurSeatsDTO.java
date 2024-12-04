@@ -11,11 +11,8 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OurSeatsDTO {
+public class OurSeatsDTO extends DTO{
 
-    private int statusCode;
-    private String error;
-    private String message;
     private String code;
     private Integer row;
     private Integer column;
@@ -24,6 +21,7 @@ public class OurSeatsDTO {
     private String type; // General, VIP, Palco
     private String state; // Available, Reserved, Sold
     private Integer place;
+
     private OurSeats ourSeats;
     private List<OurSeats> ourSeatsList;
 }

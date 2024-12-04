@@ -1,10 +1,9 @@
 package com.chaweDev.conciertosYa.service;
 
-import com.chaweDev.conciertosYa.config.JWTAuthFilter;
 import com.chaweDev.conciertosYa.dto.ReqRes;
 import com.chaweDev.conciertosYa.entity.OurUsers;
 import com.chaweDev.conciertosYa.repository.UsersRepo;
-import io.jsonwebtoken.Jwts;
+import com.chaweDev.conciertosYa.service.visual.IUsersManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsersManagementService {
+public class UsersManagementService implements IUsersManagementService {
 
     @Autowired
     private UsersRepo usersRepo;

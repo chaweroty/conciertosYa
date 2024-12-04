@@ -10,11 +10,8 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OurPlacesDTO {
+public class OurPlacesDTO extends DTO{
 
-    private int statusCode;
-    private String error;
-    private String message;
     private String name;
     private Integer capacityGeneral;
     private Double priceGen;
@@ -29,6 +26,7 @@ public class OurPlacesDTO {
     private String city;
     private String direction;
     private String image;
+
     private OurPlaces ourPlaces;
     private List<OurPlaces> ourPlacesList;
 }

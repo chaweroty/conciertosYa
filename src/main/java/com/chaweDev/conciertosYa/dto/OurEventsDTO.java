@@ -14,11 +14,8 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OurEventsDTO {
+public class OurEventsDTO extends DTO{
 
-    private int statusCode;
-    private String error;
-    private String message;
     private String name;
     private LocalDate date;
     private LocalTime hour;

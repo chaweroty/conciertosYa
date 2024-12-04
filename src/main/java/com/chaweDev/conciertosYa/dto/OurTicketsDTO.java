@@ -11,11 +11,8 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OurTicketsDTO {
+public class OurTicketsDTO extends DTO{
 
-    private int statusCode;
-    private String error;
-    private String message;
     private LocalDate buyingDate;
     private Double discount;
     private Double price;
