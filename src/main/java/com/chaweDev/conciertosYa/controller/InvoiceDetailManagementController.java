@@ -41,7 +41,7 @@ public class InvoiceDetailManagementController {
 
     @GetMapping("/get-invoice-tickets/{invoiceId}")
     public ResponseEntity<InvoiceDetailDTO> getInvoiceTicketsByInvoiceId(@PathVariable Integer invoiceId) {
-        return ResponseEntity.ok(invoiceDetailManagementService.getInvoiceDetailById(invoiceId));
+        return ResponseEntity.ok(invoiceDetailManagementService.getInvoiceTicketsByInvoiceId(invoiceId));
     }
 
     // Principio aplicado: Abierto/Cerrado (OCP)

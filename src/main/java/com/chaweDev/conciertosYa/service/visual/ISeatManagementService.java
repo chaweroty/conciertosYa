@@ -6,6 +6,7 @@ public interface ISeatManagementService {
     OurSeatsDTO addSeat(DTO seat);
     OurSeatsDTO getAllSeats();
     OurSeatsDTO getSeatById(Integer seatId);
+    OurSeatsDTO getSeatPlaceById(Integer placeId);
     OurSeatsDTO updateSeat(Integer seatId, DTO seat);
     OurSeatsDTO deleteSeat(Integer seatId);
 }

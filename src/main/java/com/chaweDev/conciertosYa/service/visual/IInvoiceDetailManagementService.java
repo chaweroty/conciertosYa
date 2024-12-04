@@ -14,4 +14,6 @@ public interface IInvoiceDetailManagementService {
     InvoiceDetailDTO updateInvoiceDetail(Integer invoiceDetailId, InvoiceDetail invoice);
 
     InvoiceDetailDTO deleteInvoiceDetail(Integer invoiceDetailId);
+
+    InvoiceDetailDTO getInvoiceTicketsByInvoiceId(Integer invoiceId);
 }

@@ -46,7 +46,7 @@ public class SeatManagementController {
 
     @GetMapping("/get-place-seats/{placeId}")
     public ResponseEntity<OurSeatsDTO> getSeatPlaceById(@PathVariable Integer placeId) {
-        return ResponseEntity.ok(seatManagementService.getSeatById(placeId));
+        return ResponseEntity.ok(seatManagementService.getSeatPlaceById(placeId));
     }
 
     // Metodo para actualizar un asiento específico.
